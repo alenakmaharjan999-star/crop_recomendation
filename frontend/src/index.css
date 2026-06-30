@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Color tokens */
+  --soil-900: #2B2018;
+  --soil-700: #3D2B1F;
+  --soil-500: #6B4F3B;
+  --growth-600: #4A7C59;
+  --growth-400: #7BA888;
+  --wheat-400: #D4A574;
+  --wheat-200: #EAD2AE;
+  --cream-50: #F7F4EC;
+  --cream-100: #F1ECE0;
+  --alert-500: #C75450;
+  --ink-900: #2B2B28;
+  --ink-600: #5C5850;
+  --line: rgba(43, 32, 24, 0.12);
+
+  /* Stratification band colors (the signature element) */
+  --band-rainfall: #5B8AA6;
+  --band-humidity: #7BA888;
+  --band-temp: #D4915C;
+  --band-ph: #9B7BA8;
+  --band-npk: #C7A35A;
+
+  /* Type */
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Layout */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-card: 0 1px 2px rgba(43,32,24,0.04), 0 8px 24px rgba(43,32,24,0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--cream-50);
+  color: var(--ink-900);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--soil-900);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+input, select {
+  font-family: var(--font-body);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--growth-600);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.strata-bar {
+  display: flex;
+  width: 100%;
+  height: 6px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.strata-bar span {
+  flex: 1;
+}
+
+.strata-bar .b-rainfall { background: var(--band-rainfall); }
+.strata-bar .b-humidity { background: var(--band-humidity); }
+.strata-bar .b-temp { background: var(--band-temp); }
+.strata-bar .b-ph { background: var(--band-ph); }
+.strata-bar .b-npk { background: var(--band-npk); }
