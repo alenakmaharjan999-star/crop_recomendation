@@ -1,0 +1,8 @@
+D:\7thsemproject\Backend\crop\crop\obj\Debug\net8.0\crop.csproj.AssemblyReference.cache
+D:\7thsemproject\Backend\crop\crop\obj\Debug\net8.0\rpswa.dswa.cache.json
+D:\7thsemproject\Backend\crop\crop\obj\Debug\net8.0\crop.GeneratedMSBuildEditorConfig.editorconfig
+D:\7thsemproject\Backend\crop\crop\obj\Debug\net8.0\crop.AssemblyInfoInputs.cache
+D:\7thsemproject\Backend\crop\crop\obj\Debug\net8.0\crop.AssemblyInfo.cs
+D:\7thsemproject\Backend\crop\crop\obj\Debug\net8.0\crop.csproj.CoreCompileInputs.cache
+D:\7thsemproject\Backend\crop\crop\obj\Debug\net8.0\crop.MvcApplicationPartsAssemblyInfo.cs
+D:\7thsemproject\Backend\crop\crop\obj\Debug\net8.0\crop.MvcApplicationPartsAssemblyInfo.cache

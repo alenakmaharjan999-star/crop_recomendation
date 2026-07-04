@@ -1,0 +1,319 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\7thsemproject\\Backend\\crop\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\repositories\\predictionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\repositories\\predictionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\services\\weatherservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\services\\weatherservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\controllers\\predictioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\controllers\\predictioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\services\\passwordservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\services\\passwordservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\services\\predictionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\services\\predictionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\dtos\\predictresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\dtos\\predictresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\dtos\\predictrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\dtos\\predictrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\dtos\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\dtos\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\dtos\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\dtos\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\models\\predictionhistory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\models\\predictionhistory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|d:\\7thsemproject\\backend\\crop\\crop\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}|crop\\crop.csproj|solutionrelative:crop\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{56df62a4-05a3-4e5b-aa1a-99371ccfb997}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\Program.cs",
+              "RelativeDocumentMoniker": "crop\\Program.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\Program.cs",
+              "RelativeToolTip": "crop\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T16:38:56.389Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PredictionRepository.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\Repositories\\PredictionRepository.cs",
+              "RelativeDocumentMoniker": "crop\\Repositories\\PredictionRepository.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\Repositories\\PredictionRepository.cs",
+              "RelativeToolTip": "crop\\Repositories\\PredictionRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T16:38:05.11Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "UserRepository.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\Repositories\\UserRepository.cs",
+              "RelativeDocumentMoniker": "crop\\Repositories\\UserRepository.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\Repositories\\UserRepository.cs",
+              "RelativeToolTip": "crop\\Repositories\\UserRepository.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAA+wAUAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T16:36:24.805Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "crop\\Data\\AppDbContext.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "crop\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T16:34:25.552Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PasswordService.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\Services\\PasswordService.cs",
+              "RelativeDocumentMoniker": "crop\\Services\\PasswordService.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\Services\\PasswordService.cs",
+              "RelativeToolTip": "crop\\Services\\PasswordService.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAEBawAUAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T16:30:04.927Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "PredictionService.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\Services\\PredictionService.cs",
+              "RelativeDocumentMoniker": "crop\\Services\\PredictionService.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\Services\\PredictionService.cs",
+              "RelativeToolTip": "crop\\Services\\PredictionService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T16:28:17.804Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "WeatherService.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\Services\\WeatherService.cs",
+              "RelativeDocumentMoniker": "crop\\Services\\WeatherService.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\Services\\WeatherService.cs",
+              "RelativeToolTip": "crop\\Services\\WeatherService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T15:57:45.201Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "crop\\Services\\AuthService.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\Services\\AuthService.cs",
+              "RelativeToolTip": "crop\\Services\\AuthService.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAABewAYAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T15:56:49.51Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "PredictResponseDto.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\DTOS\\PredictResponseDto.cs",
+              "RelativeDocumentMoniker": "crop\\DTOS\\PredictResponseDto.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\DTOS\\PredictResponseDto.cs",
+              "RelativeToolTip": "crop\\DTOS\\PredictResponseDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T15:52:40.551Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "PredictRequestDto.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\DTOS\\PredictRequestDto.cs",
+              "RelativeDocumentMoniker": "crop\\DTOS\\PredictRequestDto.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\DTOS\\PredictRequestDto.cs",
+              "RelativeToolTip": "crop\\DTOS\\PredictRequestDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAEBawAUAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T15:51:56.013Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "LoginDto.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\DTOS\\LoginDto.cs",
+              "RelativeDocumentMoniker": "crop\\DTOS\\LoginDto.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\DTOS\\LoginDto.cs",
+              "RelativeToolTip": "crop\\DTOS\\LoginDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T15:35:11.74Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "RegisterDto.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\DTOS\\RegisterDto.cs",
+              "RelativeDocumentMoniker": "crop\\DTOS\\RegisterDto.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\DTOS\\RegisterDto.cs",
+              "RelativeToolTip": "crop\\DTOS\\RegisterDto.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAkwAwAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T08:16:32.411Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "PredictionHistory.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\Models\\PredictionHistory.cs",
+              "RelativeDocumentMoniker": "crop\\Models\\PredictionHistory.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\Models\\PredictionHistory.cs",
+              "RelativeToolTip": "crop\\Models\\PredictionHistory.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAkwA4AAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T08:11:15.358Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\Models\\User.cs",
+              "RelativeDocumentMoniker": "crop\\Models\\User.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\Models\\User.cs",
+              "RelativeToolTip": "crop\\Models\\User.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAA0wAwAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T08:07:26.891Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "PredictionController.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\Controllers\\PredictionController.cs",
+              "RelativeDocumentMoniker": "crop\\Controllers\\PredictionController.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\Controllers\\PredictionController.cs",
+              "RelativeToolTip": "crop\\Controllers\\PredictionController.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAEBawAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T08:04:23.921Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "crop\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "crop\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAACgAAAAAAAAAAAA5wAgAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T07:57:42.625Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\7thsemproject\\Backend\\crop\\crop\\appsettings.json",
+              "RelativeDocumentMoniker": "crop\\appsettings.json",
+              "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\appsettings.json",
+              "RelativeToolTip": "crop\\appsettings.json",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAB8AAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-06-30T04:58:31.352Z"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

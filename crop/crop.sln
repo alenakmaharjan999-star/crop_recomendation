@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36221.1 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crop", "crop\crop.csproj", "{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB0EA697-75E6-4F5D-AB72-BCC1AB6F0F44}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {20BFBB75-3781-469B-A564-9DDEDA1FD442}
+	EndGlobalSection
+EndGlobal
