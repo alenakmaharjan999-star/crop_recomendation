@@ -1,0 +1,123 @@
+.auth-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream-50);
+  padding: 24px;
+}
+
+.auth-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  max-width: 920px;
+  min-height: 560px;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.auth-card__panel {
+  background: var(--soil-700);
+  background-image: linear-gradient(165deg, var(--soil-700) 0%, var(--soil-900) 100%);
+  color: var(--cream-50);
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.auth-card__logo {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.auth-card__panel-title {
+  color: var(--cream-50);
+  font-size: 1.8rem;
+  font-weight: 500;
+  line-height: 1.25;
+  margin-bottom: 16px;
+}
+
+.auth-card__panel-text {
+  color: var(--wheat-200);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  max-width: 320px;
+}
+
+.strata-legend {
+  margin-top: 32px;
+  max-width: 320px;
+}
+
+.strata-legend__labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+  color: var(--wheat-200);
+  opacity: 0.8;
+}
+
+.auth-card__panel-foot {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--growth-400);
+  letter-spacing: 0.02em;
+}
+
+.auth-card__form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.auth-card__form-inner {
+  width: 100%;
+  max-width: 340px;
+}
+
+.auth-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--growth-600);
+  margin-bottom: 10px;
+}
+
+.auth-title {
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+}
+
+.auth-subtitle {
+  color: var(--ink-600);
+  font-size: 0.9rem;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 760px) {
+  .auth-card {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .auth-card__panel {
+    padding: 32px 28px;
+  }
+  .auth-card__panel-title {
+    font-size: 1.4rem;
+  }
+  .strata-legend {
+    margin-top: 20px;
+  }
+}
