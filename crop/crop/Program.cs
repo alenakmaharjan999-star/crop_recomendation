@@ -1,8 +1,6 @@
 using crop.Data;
 using crop.Repositories;
 using crop.Services;
-using EKrishiAPI.Repositories;
-using EKrishiAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

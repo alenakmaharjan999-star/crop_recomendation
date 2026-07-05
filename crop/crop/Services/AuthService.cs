@@ -5,12 +5,13 @@
 using crop.DTOs;
 using crop.Models;
 using crop.Repositories;
+
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace EKrishiAPI.Services;
+namespace crop.Services;
 
 public interface IAuthService
 {
