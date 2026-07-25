@@ -10,7 +10,7 @@ using crop.DTOs;
 using crop.Models;
 using crop.Repositories;
 using crop.Services;
-
+using System.Text.Json;
 namespace crop.Services;
 
 public interface IPredictionService
@@ -43,12 +43,14 @@ public class PredictionService : IPredictionService
             N = dto.Nitrogen,
             P = dto.Phosphorus,
             K = dto.Potassium,
-            pH = dto.Ph,
+            ph = dto.Ph,
             temperature,
             humidity,
             rainfall
         };
-        var response = await client.PostAsJsonAsync("/predict", payload);
+        //var response = await client.PostAsJsonAsync("/predict", payload);
+        var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = null };
+        var response = await client.PostAsJsonAsync("/predict", payload, jsonOptions);
         if (!response.IsSuccessStatusCode)
             throw new Exception("ML service call failed");
 
