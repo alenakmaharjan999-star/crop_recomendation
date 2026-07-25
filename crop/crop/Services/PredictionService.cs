@@ -33,8 +33,7 @@ public class PredictionService : IPredictionService
 
     public async Task<PredictResponseDto> PredictAsync(PredictRequestDto dto, int userId)
     {
-        // Step 1: get weather from OpenWeather using Location
-        var (temperature, humidity, rainfall) = await _weather.GetWeatherAsync(dto.Location);
+        var location = string.IsNullOrWhiteSpace(dto.Location) ? "Kathmandu" : dto.Location;`r`n        var temperature = dto.Temperature;`r`n        var humidity = dto.Humidity;`r`n        var rainfall = dto.Rainfall;`r`n`r`n        if (temperature == 0 && humidity == 0 && rainfall == 0)`r`n        {`r`n            (temperature, humidity, rainfall) = await _weather.GetWeatherAsync(location);`r`n        }
 
         // Step 2: call Python Flask /predict with all 7 ML features
         var client = _httpFactory.CreateClient("PythonML");
@@ -65,7 +64,7 @@ public class PredictionService : IPredictionService
             Phosphorus = dto.Phosphorus,
             Potassium = dto.Potassium,
             Ph = dto.Ph,
-            Location = dto.Location,
+            Location = location,
             Temperature = temperature,
             Humidity = humidity,
             Rainfall = rainfall,
@@ -79,3 +78,4 @@ public class PredictionService : IPredictionService
     public Task<List<PredictionHistory>> GetHistoryAsync(int userId)
         => _predictions.GetByUserIdAsync(userId);
 }
+

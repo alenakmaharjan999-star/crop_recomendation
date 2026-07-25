@@ -1,7 +1,6 @@
-import axios from 'axios';
+﻿import axios from 'axios';
 
-// Change this to your .NET backend's actual base URL
-const BASE_URL = 'https://localhost:5001/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5028/api';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -30,29 +29,73 @@ apiClient.interceptors.response.use(
 
 // ---- Auth ----
 export function registerUser(data) {
-  return apiClient.post('/auth/register', data);
+  return apiClient.post('/auth/register', {
+    username: data.email,
+    password: data.password,
+  });
 }
 
-export function loginUser(data) {
-  return apiClient.post('/auth/login', data);
+export async function loginUser(data) {
+  const response = await apiClient.post('/auth/login', {
+    username: data.email,
+    password: data.password,
+  });
+
+  response.data = {
+    ...response.data,
+    user: response.data.user || {
+      email: data.email,
+      fullName: data.email,
+    },
+  };
+
+  return response;
 }
 
 // ---- Soil / recommendation ----
-export function submitSoilData(data) {
-  return apiClient.post('/recommendation/predict', data);
+export async function submitSoilData(data) {
+  const response = await apiClient.post('/prediction/predict', data);
+  response.data = normalizePrediction(response.data, data);
+  return response;
 }
 
-export function getLatestRecommendation() {
-  return apiClient.get('/recommendation/latest');
+export async function getLatestRecommendation() {
+  const response = await getRecommendationHistory();
+  response.data = response.data[0] || null;
+  return response;
 }
 
-export function getRecommendationHistory() {
-  return apiClient.get('/recommendation/history');
+export async function getRecommendationHistory() {
+  const response = await apiClient.get('/prediction/history');
+  response.data = (response.data || []).map(normalizePrediction);
+  return response;
 }
 
 // ---- Weather ----
 export function getCurrentWeather() {
   return apiClient.get('/weather/current');
+}
+
+function normalizePrediction(item, fallback = {}) {
+  if (!item) return item;
+
+  return {
+    ...item,
+    id: item.id ?? item.predictionId,
+    crop: item.crop ?? item.predictedCrop,
+    date: item.date ?? item.createdAt,
+    confidence:
+      item.confidence != null && item.confidence > 1
+        ? item.confidence / 100
+        : item.confidence,
+    nitrogen: item.nitrogen ?? fallback.nitrogen,
+    phosphorus: item.phosphorus ?? fallback.phosphorus,
+    potassium: item.potassium ?? fallback.potassium,
+    ph: item.ph ?? fallback.ph,
+    temperature: item.temperature ?? fallback.temperature,
+    humidity: item.humidity ?? fallback.humidity,
+    rainfall: item.rainfall ?? fallback.rainfall,
+  };
 }
 
 export default apiClient;

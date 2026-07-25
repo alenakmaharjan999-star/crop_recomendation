@@ -1,4 +1,4 @@
-using crop.Data;
+ï»¿using crop.Data;
 using crop.Repositories;
 using crop.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -46,7 +46,7 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // HTTP client for calling Python Flask (http://localhost:5000)
-// Named "PythonML" — used in PredictionService
+// Named "PythonML" â€” used in PredictionService
 builder.Services.AddHttpClient("PythonML", c =>
     c.BaseAddress = new Uri("http://localhost:5000"));
 
@@ -62,7 +62,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPredictionService, PredictionService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 
-// JWT authentication — validates token React sends in Authorization header
+// JWT authentication â€” validates token React sends in Authorization header
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -80,7 +80,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Allow React (localhost:3000) to call this API
 builder.Services.AddCors(opt =>
     opt.AddPolicy("AllowReact", p =>
-        p.WithOrigins("http://localhost:3000")
+        p.WithOrigins("http://localhost:3000", "http://localhost:5173")
          .AllowAnyHeader()
          .AllowAnyMethod()));
 
