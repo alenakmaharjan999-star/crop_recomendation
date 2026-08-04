@@ -11,6 +11,9 @@ import {
   getCurrentWeather,
 } from '../api/apiClient';
 
+// Use the image from the public folder
+const cropBg = '/crop_pic.jpg';
+
 export default function Dashboard() {
   const { user } = useAuth();
 
@@ -63,96 +66,104 @@ export default function Dashboard() {
 
   return (
     <AppLayout>
-      <div className="dash-header">
-        <div>
-          <h1 className="dash-header__greeting">
-            Namaste, {user?.fullName?.split(' ')[0] || 'there'} 👋
-          </h1>
-          <p className="dash-header__date">{today}</p>
-        </div>
-
-        <div className="weather-pill">
-          <span className="weather-pill__icon">{weather ? weatherIcon(weather.condition) : '⛅'}</span>
+      <div 
+        className="dash-wrapper"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url(${cropBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          borderRadius: '16px',
+          padding: '24px',
+          minHeight: 'calc(100vh - 40px)',
+        }}
+      >
+        <div className="dash-header">
           <div>
-            <p className="weather-pill__temp">
-              {weather ? `${Math.round(weather.temperature)}°C` : '—'}
-            </p>
-            <p className="weather-pill__meta">
-              Kathmandu{weather ? ` · ${weather.condition}` : ' · loading…'}
-            </p>
+            <h1 className="dash-header__greeting" style={{ color: '#ffffff', textShadow: '0 2px 4px rgba(0,0,0,0.4)' }}>
+              Namaste, {user?.fullName?.split(' ')[0] || 'there'} 👋
+            </h1>
+            <p className="dash-header__date" style={{ color: '#e2e8f0' }}>{today}</p>
+          </div>
+
+          <div className="weather-pill" style={{ backdropFilter: 'blur(8px)', backgroundColor: 'rgba(255, 255, 255, 0.85)' }}>
+            <span className="weather-pill__icon">{weather ? weatherIcon(weather.condition) : '⛅'}</span>
+            <div>
+              <p className="weather-pill__temp">
+                {weather ? `${Math.round(weather.temperature)}°C` : '—'}
+              </p>
+              <p className="weather-pill__meta">
+                Kathmandu{weather ? ` · ${weather.condition}` : ' · loading…'}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="stat-row">
-        <StatCard
-          label="Total recommendations"
-          value={loadingHistory ? '—' : totalRecommendations}
-          bandClass="b-npk"
-        />
-        <StatCard
-          label="Most recommended crop"
-          value={loadingHistory ? '—' : (mostRecommendedCrop || 'None yet')}
-          bandClass="b-humidity"
-        />
-        <StatCard
-          label="Avg. model confidence"
-          value={loadingHistory ? '—' : (avgConfidence != null ? avgConfidence : 'N/A')}
-          unit={avgConfidence != null ? '%' : ''}
-          bandClass="b-rainfall"
-        />
-      </div>
-
-      <div className="dash-grid">
-        <div className="panel">
-          <h3 className="panel__title">Get a recommendation</h3>
-          <p className="panel__subtitle">
-            Enter your soil readings — temperature and humidity are pre-filled from today's weather.
-          </p>
-          <SoilForm
-            onSubmit={handlePredict}
-            loading={predicting}
-            prefill={
-              weather
-                ? { temperature: weather.temperature, humidity: weather.humidity }
-                : {}
-            }
+        <div className="stat-row">
+          <StatCard
+            label="Total recommendations"
+            value={loadingHistory ? '—' : totalRecommendations}
+            bandClass="b-npk"
           />
-          <RecommendationCard
-            crop={latest?.crop}
-            confidence={latest?.confidence}
-            loading={false}
+          <StatCard
+            label="Most recommended crop"
+            value={loadingHistory ? '—' : (mostRecommendedCrop || 'None yet')}
+            bandClass="b-humidity"
+          />
+          <StatCard
+            label="Avg. model confidence"
+            value={loadingHistory ? '—' : (avgConfidence != null ? avgConfidence : 'N/A')}
+            unit={avgConfidence != null ? '%' : ''}
+            bandClass="b-rainfall"
           />
         </div>
 
-        <div className="panel">
-          <h3 className="panel__title">Recent history</h3>
-          <p className="panel__subtitle">Your last predictions, most recent first.</p>
-
-          {loadingHistory ? (
-            <p style={{ color: 'var(--ink-600)', fontSize: '0.88rem' }}>Loading history…</p>
-          ) : history.length === 0 ? (
-            <p style={{ color: 'var(--ink-600)', fontSize: '0.88rem' }}>
-              No predictions yet. Submit the form to see your history here.
+        <div className="dash-grid">
+          <div className="panel" style={{ backdropFilter: 'blur(12px)', backgroundColor: 'rgba(255, 255, 255, 0.92)' }}>
+            <h3 className="panel__title">Get a recommendation</h3>
+            <p className="panel__subtitle">
+              Enter your soil readings and location to get a crop recommendation.
             </p>
-          ) : (
-            <div className="history-list">
-              {history.map((item, idx) => (
-                <div className="history-item" key={item.id || idx}>
-                  <div>
-                    <p className="history-item__crop">{item.crop}</p>
-                    <p className="history-item__date">
-                      {item.date ? new Date(item.date).toLocaleDateString() : '—'}
-                      {' · '}N {item.nitrogen} P {item.phosphorus} K {item.potassium} · pH {item.ph}
-                    </p>
+            <SoilForm
+              onSubmit={handlePredict}
+              loading={predicting}
+            />
+            <RecommendationCard
+              crop={latest?.crop}
+              confidence={latest?.confidence}
+              loading={false}
+            />
+          </div>
+
+          <div className="panel" style={{ backdropFilter: 'blur(12px)', backgroundColor: 'rgba(255, 255, 255, 0.92)' }}>
+            <h3 className="panel__title">Recent history</h3>
+            <p className="panel__subtitle">Your last predictions, most recent first.</p>
+
+            {loadingHistory ? (
+              <p style={{ color: 'var(--ink-600)', fontSize: '0.88rem' }}>Loading history…</p>
+            ) : history.length === 0 ? (
+              <p style={{ color: 'var(--ink-600)', fontSize: '0.88rem' }}>
+                No predictions yet. Submit the form to see your history here.
+              </p>
+            ) : (
+              <div className="history-list">
+                {history.map((item, idx) => (
+                  <div className="history-item" key={item.id || idx}>
+                    <div>
+                      <p className="history-item__crop">{item.crop}</p>
+                      <p className="history-item__date">
+                        {item.date ? new Date(item.date).toLocaleDateString() : '—'}
+                        {' · '}N {item.nitrogen} P {item.phosphorus} K {item.potassium} · pH {item.ph}
+                      </p>
+                    </div>
+                    <span className="history-item__confidence">
+                      {item.confidence != null ? `${Math.round(item.confidence * 100)}%` : '—'}
+                    </span>
                   </div>
-                  <span className="history-item__confidence">
-                    {item.confidence != null ? `${Math.round(item.confidence * 100)}%` : '—'}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </AppLayout>

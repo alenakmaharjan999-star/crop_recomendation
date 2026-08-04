@@ -10,8 +10,17 @@
   min-width: 0;
 }
 
+.app-layout__main--farm {
+  padding: 0;
+  background: #07150d;
+}
+
 @media (max-width: 720px) {
   .app-layout__main {
     padding: 24px 20px;
+  }
+
+  .app-layout__main--farm {
+    padding: 0;
   }
 }

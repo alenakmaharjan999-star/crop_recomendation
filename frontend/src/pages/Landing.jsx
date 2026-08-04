@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
 import PublicNavbar from '../components/PublicNavbar';
 import '../components/Landing.css';
+// Use the image from the public folder
+const cropPic = '/crop_pic.png';
+
 
 export default function Landing() {
   return (
@@ -17,14 +20,19 @@ export default function Landing() {
           </p>
         </div>
 
-        <div className="hero__strata" aria-hidden="true">
-          <div className="strata-bar">
-            <span className="b-rainfall" />
-            <span className="b-humidity" />
-            <span className="b-temp" />
-            <span className="b-ph" />
-            <span className="b-npk" />
-          </div>
+        <div className="hero__image-wrapper">
+          <img 
+            src={cropPic} 
+            alt="Crop field" 
+            style={{
+              width: '100%',
+              maxWidth: '320px',
+              height: '380px',
+              objectFit: 'cover',
+              borderRadius: '28px',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
+            }}
+          />
         </div>
       </section>
 
