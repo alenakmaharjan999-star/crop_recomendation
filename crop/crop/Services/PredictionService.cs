@@ -9,8 +9,9 @@
 using crop.DTOs;
 using crop.Models;
 using crop.Repositories;
-using crop.Services;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+
 namespace crop.Services;
 
 public interface IPredictionService
@@ -33,7 +34,15 @@ public class PredictionService : IPredictionService
 
     public async Task<PredictResponseDto> PredictAsync(PredictRequestDto dto, int userId)
     {
-        var location = string.IsNullOrWhiteSpace(dto.Location) ? "Kathmandu" : dto.Location;`r`n        var temperature = dto.Temperature;`r`n        var humidity = dto.Humidity;`r`n        var rainfall = dto.Rainfall;`r`n`r`n        if (temperature == 0 && humidity == 0 && rainfall == 0)`r`n        {`r`n            (temperature, humidity, rainfall) = await _weather.GetWeatherAsync(location);`r`n        }
+        var location = string.IsNullOrWhiteSpace(dto.Location) ? "Kathmandu" : dto.Location;
+        var temperature = dto.Temperature;
+        var humidity = dto.Humidity;
+        var rainfall = dto.Rainfall;
+
+        if (temperature == 0 && humidity == 0 && rainfall == 0)
+        {
+            (temperature, humidity, rainfall) = await _weather.GetWeatherAsync(location);
+        }
 
         // Step 2: call Python Flask /predict with all 7 ML features
         var client = _httpFactory.CreateClient("PythonML");
@@ -53,8 +62,13 @@ public class PredictionService : IPredictionService
         if (!response.IsSuccessStatusCode)
             throw new Exception("ML service call failed");
 
-        var result = await response.Content.ReadFromJsonAsync<PredictResponseDto>()
+        var mlResult = await response.Content.ReadFromJsonAsync<FlaskPredictionResponse>()
                      ?? throw new Exception("Empty prediction response");
+        var result = new PredictResponseDto
+        {
+            PredictedCrop = mlResult.RecommendedCrop,
+            Confidence = 0
+        };
 
         // Step 3: save everything to PredictionHistory table
         await _predictions.AddAsync(new PredictionHistory
@@ -77,5 +91,11 @@ public class PredictionService : IPredictionService
 
     public Task<List<PredictionHistory>> GetHistoryAsync(int userId)
         => _predictions.GetByUserIdAsync(userId);
+
+    private sealed class FlaskPredictionResponse
+    {
+        [JsonPropertyName("recommended_crop")]
+        public string RecommendedCrop { get; set; } = string.Empty;
+    }
 }
 

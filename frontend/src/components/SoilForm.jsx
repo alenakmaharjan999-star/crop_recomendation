@@ -7,10 +7,6 @@ const initialValues = {
   nitrogen: '',
   phosphorus: '',
   potassium: '',
-<<<<<<< HEAD
-  location: '',
-=======
->>>>>>> alena
   ph: '',
 };
 
@@ -24,55 +20,16 @@ export default function SoilForm({ onSubmit, loading }) {
 
   function handleChange(e) {
     const { name, value } = e.target;
-<<<<<<< HEAD
-
-    setValues((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    setErrors((prev) => ({
-      ...prev,
-      [name]: '',
-    }));
-=======
     setValues((prev) => ({ ...prev, [name]: value }));
     if (name === 'location') {
       setCoordinates(null);
     }
     setErrors((prev) => ({ ...prev, [name]: '' }));
->>>>>>> alena
   }
 
   function validate() {
     const errs = {};
 
-<<<<<<< HEAD
-    // Numeric fields
-    ['nitrogen', 'phosphorus', 'potassium', 'ph'].forEach((field) => {
-      const value = values[field];
-
-      if (value === '') {
-        errs[field] = 'Required';
-      } else if (Number.isNaN(Number(value))) {
-        errs[field] = 'Must be a number';
-      }
-    });
-
-    // Location validation
-    if (!values.location.trim()) {
-      errs.location = 'Required';
-    }
-
-    // pH range validation
-    if (
-      values.ph !== '' &&
-      (Number(values.ph) < 0 || Number(values.ph) > 14)
-    ) {
-      errs.ph = 'pH must be between 0 and 14';
-    }
-
-=======
     Object.entries(values).forEach(([key, val]) => {
       const isEmpty = val === '' || val === null;
 
@@ -94,7 +51,6 @@ export default function SoilForm({ onSubmit, loading }) {
       errs.location = 'Detect your location or enter latitude, longitude';
     }
 
->>>>>>> alena
     return errs;
   }
 
@@ -144,23 +100,16 @@ export default function SoilForm({ onSubmit, loading }) {
       return;
     }
 
-<<<<<<< HEAD
-=======
     const manualCoordinates = parseCoordinates(values.location);
     const submitCoordinates = coordinates || manualCoordinates;
 
->>>>>>> alena
     onSubmit({
       nitrogen: Number(values.nitrogen),
       phosphorus: Number(values.phosphorus),
       potassium: Number(values.potassium),
       ph: Number(values.ph),
-<<<<<<< HEAD
-      location: values.location.trim(),
-=======
       latitude: submitCoordinates.latitude,
       longitude: submitCoordinates.longitude,
->>>>>>> alena
     });
   }
 
@@ -222,34 +171,13 @@ export default function SoilForm({ onSubmit, loading }) {
           placeholder="0 - 14"
           error={errors.ph}
           inputMode="decimal"
-<<<<<<< HEAD
-        />
-
-        <FormField
-          label="Location"
-          name="location"
-          value={values.location}
-          onChange={handleChange}
-          placeholder="Enter your location"
-          error={errors.location}
-          inputMode="text"
-=======
           min="0"
           max="14"
           step="0.1"
->>>>>>> alena
         />
       </div>
 
       <button
-<<<<<<< HEAD
-        type="submit"
-        className="btn-primary"
-        disabled={loading}
-        style={{ marginTop: 14 }}
-      >
-        {loading ? 'Predicting…' : 'Predict crop'}
-=======
         type="button"
         className="btn-primary btn-primary--ghost"
         disabled={loading || detectingLocation}
@@ -267,7 +195,6 @@ export default function SoilForm({ onSubmit, loading }) {
 
       <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: 14 }}>
         {loading ? 'Predicting...' : 'Predict crop'}
->>>>>>> alena
       </button>
     </form>
   );
