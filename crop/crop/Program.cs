@@ -1,25 +1,52 @@
-using crop.Data;
+ï»¿using crop.Data;
 using crop.Repositories;
 using crop.Services;
-using EKrishiAPI.Repositories;
-using EKrishiAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter your JWT token below (no need to type 'Bearer ' prefix)"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 // Connect to SQL Server using connection string from appsettings.json
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // HTTP client for calling Python Flask (http://localhost:5000)
-// Named "PythonML" — used in PredictionService
+// Named "PythonML" â€” used in PredictionService
 builder.Services.AddHttpClient("PythonML", c =>
     c.BaseAddress = new Uri("http://localhost:5000"));
 
@@ -35,7 +62,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPredictionService, PredictionService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 
-// JWT authentication — validates token React sends in Authorization header
+// JWT authentication â€” validates token React sends in Authorization header
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -53,7 +80,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Allow React (localhost:3000) to call this API
 builder.Services.AddCors(opt =>
     opt.AddPolicy("AllowReact", p =>
-        p.WithOrigins("http://localhost:3000")
+        p.WithOrigins("http://localhost:3000", "http://localhost:5173")
          .AllowAnyHeader()
          .AllowAnyMethod()));
 
@@ -61,6 +88,10 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }

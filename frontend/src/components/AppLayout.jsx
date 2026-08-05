@@ -1,6 +1,6 @@
 import Sidebar from './Sidebar';
 
-export default function AppLayout({ children }) {
+export default function AppLayout({ children, mainClassName = '' }) {
   return (
     <div className="flex min-h-screen bg-slate-100">
       <Sidebar />

@@ -1,5 +1,6 @@
 export default function FormField({
   label,
+  icon,
   type = 'text',
   name,
   value,

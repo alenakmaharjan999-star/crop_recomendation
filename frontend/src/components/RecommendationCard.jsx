@@ -1,4 +1,6 @@
-export default function RecommendationCard({ crop, confidence, loading }) {
+export default function RecommendationCard({ crop, confidence, loading, className = '' }) {
+  const classes = `recommendation-card ${className}`.trim();
+
   if (loading) {
     return (
       <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-600">
@@ -34,5 +36,14 @@ export default function RecommendationCard({ crop, confidence, loading }) {
         </div>
       )}
     </div>
+  );
+}
+
+function LeafIcon() {
+  return (
+    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+      <path d="M20.6 3.4c-7.8.1-13 2.7-15.6 7.8-1.6 3.1-1.4 6.2.2 8.1 1.9 1.9 5.2 1.6 8.2-.2 4.9-2.8 7.1-8 7.2-15.7Z" />
+      <path d="M4.7 19.3c3.2-4.9 7.1-8.3 11.8-10.2" />
+    </svg>
   );
 }

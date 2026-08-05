@@ -10,6 +10,9 @@ import {
   getCurrentWeather,
 } from '../api/apiClient';
 
+// Use the image from the public folder
+const cropBg = '/crop_pic.jpg';
+
 export default function Dashboard() {
   const { user } = useAuth();
 
@@ -79,7 +82,6 @@ export default function Dashboard() {
             </p>
           </div>
         </div>
-      </div>
 
       <div className="mb-7 grid gap-4 md:grid-cols-3">
         <StatCard
@@ -115,10 +117,16 @@ export default function Dashboard() {
                 : {}
             }
           />
-          <RecommendationCard
-            crop={latest?.crop}
-            confidence={latest?.confidence}
-            loading={false}
+          <StatCard
+            label="Most recommended crop"
+            value={loadingHistory ? '—' : (mostRecommendedCrop || 'None yet')}
+            bandClass="b-humidity"
+          />
+          <StatCard
+            label="Avg. model confidence"
+            value={loadingHistory ? '—' : (avgConfidence != null ? avgConfidence : 'N/A')}
+            unit={avgConfidence != null ? '%' : ''}
+            bandClass="b-rainfall"
           />
         </div>
 

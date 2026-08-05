@@ -34,3 +34,12 @@ export default function Recommend() {
     </AppLayout>
   );
 }
+
+function LeafIcon() {
+  return (
+    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+      <path d="M20 4c-7.2.2-12 2.6-14.5 7.1-1.7 3-1.5 6.2.2 7.9 1.8 1.8 5 1.5 8-.2 4.4-2.5 6.4-7.4 6.3-14.8Z" />
+      <path d="M5 19c3.1-4.7 6.8-8 11.3-9.9" />
+    </svg>
+  );
+}

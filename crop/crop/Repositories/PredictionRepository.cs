@@ -6,7 +6,7 @@ using crop.Data;
 using crop.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace EKrishiAPI.Repositories;
+namespace crop.Repositories;
 
 public interface IPredictionRepository
 {
