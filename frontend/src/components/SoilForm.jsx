@@ -32,13 +32,12 @@ export default function SoilForm({ onSubmit, loading }) {
 
     ['nitrogen', 'phosphorus', 'potassium', 'ph'].forEach((field) => {
       const value = values[field];
+      const isEmpty = String(value).trim() === '';
 
-      if (key === 'location' && String(val).trim() === '') {
-        errs[key] = 'Required';
-      } else if (requiredFields.has(key) && isEmpty) {
-        errs[key] = 'Required';
-      } else if (key !== 'location' && !isEmpty && Number.isNaN(Number(val))) {
-        errs[key] = 'Must be a number';
+      if (isEmpty) {
+        errs[field] = 'Required';
+      } else if (Number.isNaN(Number(value))) {
+        errs[field] = 'Must be a number';
       }
     });
 
@@ -182,7 +181,8 @@ export default function SoilForm({ onSubmit, loading }) {
       </div>
 
       <button
-        type="submit"
+        type="button"
+        onClick={handleDetectLocation}
         className="mt-3.5 w-full rounded-[10px] bg-gradient-to-b from-[#55A89B] to-[#2F8C7F] px-4 py-3 text-[0.92rem] font-semibold text-white shadow-[0_2px_6px_rgba(47,140,127,0.2)] transition duration-150 ease-out hover:brightness-[0.96] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
         disabled={loading}
       >
