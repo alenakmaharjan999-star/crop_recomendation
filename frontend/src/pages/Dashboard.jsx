@@ -82,7 +82,7 @@ export default function Dashboard() {
             </p>
           </div>
         </div>
-
+</div>
       <div className="mb-7 grid gap-4 md:grid-cols-3">
         <StatCard
           label="Total recommendations"
