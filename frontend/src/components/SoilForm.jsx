@@ -30,8 +30,8 @@ export default function SoilForm({ onSubmit, loading }) {
   function validate() {
     const errs = {};
 
-    Object.entries(values).forEach(([key, val]) => {
-      const isEmpty = val === '' || val === null;
+    ['nitrogen', 'phosphorus', 'potassium', 'ph'].forEach((field) => {
+      const value = values[field];
 
       if (key === 'location' && String(val).trim() === '') {
         errs[key] = 'Required';
@@ -41,6 +41,10 @@ export default function SoilForm({ onSubmit, loading }) {
         errs[key] = 'Must be a number';
       }
     });
+
+    if (!values.location.trim()) {
+      errs.location = 'Required';
+    }
 
     if (values.ph !== '' && (Number(values.ph) < 0 || Number(values.ph) > 14)) {
       errs.ph = 'pH must be between 0 and 14';
@@ -115,7 +119,7 @@ export default function SoilForm({ onSubmit, loading }) {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <div className="soil-form__grid">
+      <div className="grid gap-x-4 gap-y-0 md:grid-cols-2">
         <FormField
           label="Location"
           icon={<LocationIcon />}
@@ -178,11 +182,9 @@ export default function SoilForm({ onSubmit, loading }) {
       </div>
 
       <button
-        type="button"
-        className="btn-primary btn-primary--ghost"
-        disabled={loading || detectingLocation}
-        onClick={handleDetectLocation}
-        style={{ marginTop: 14 }}
+        type="submit"
+        className="mt-3.5 w-full rounded-[10px] bg-gradient-to-b from-[#55A89B] to-[#2F8C7F] px-4 py-3 text-[0.92rem] font-semibold text-white shadow-[0_2px_6px_rgba(47,140,127,0.2)] transition duration-150 ease-out hover:brightness-[0.96] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+        disabled={loading}
       >
         {detectingLocation ? 'Detecting...' : 'Detect my location'}
       </button>

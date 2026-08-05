@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 import FormField from '../components/FormField';
-import '../components/Forms.css';
 import { registerUser } from '../api/apiClient';
 
 export default function Register() {
@@ -83,14 +82,14 @@ export default function Register() {
       subtitle="Track soil readings and get crop recommendations."
     >
       <form onSubmit={handleSubmit} noValidate>
-        {bannerError && <div className="form-banner-error">{bannerError}</div>}
+        {bannerError && <div className="mb-4 rounded-[8px] border border-red-200 bg-red-50 px-3 py-2.5 text-[0.85rem] text-red-500">{bannerError}</div>}
 
         <FormField
           label="Full name"
           name="fullName"
           value={form.fullName}
           onChange={handleChange}
-          placeholder="Alena Maharjan"
+          placeholder="Enter your name "
           error={fieldErrors.fullName}
           autoComplete="name"
         />
@@ -128,12 +127,12 @@ export default function Register() {
           autoComplete="new-password"
         />
 
-        <button type="submit" className="btn-primary" disabled={loading}>
+        <button type="submit" className="mt-1.5 w-full rounded-[10px] bg-gradient-to-b from-[#55A89B] to-[#2F8C7F] px-4 py-3 text-[0.92rem] font-semibold text-white shadow-[0_2px_6px_rgba(47,140,127,0.2)] transition duration-150 ease-out hover:brightness-[0.96] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60" disabled={loading}>
           {loading ? 'Creating account…' : 'Sign up'}
         </button>
 
-        <p className="auth-switch">
-          Already have an account? <Link to="/login">Sign in</Link>
+        <p className="mt-5 text-center text-[0.86rem] text-slate-600">
+          Already have an account? <Link to="/login" className="font-semibold text-emerald-600 hover:underline">Sign in</Link>
         </p>
       </form>
     </AuthLayout>

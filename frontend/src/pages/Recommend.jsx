@@ -2,8 +2,6 @@ import { useState } from 'react';
 import AppLayout from '../components/AppLayout';
 import SoilForm from '../components/SoilForm';
 import RecommendationCard from '../components/RecommendationCard';
-import '../components/Dashboard.css';
-import './Recommend.css';
 import { submitSoilData } from '../api/apiClient';
 
 export default function Recommend() {
@@ -23,43 +21,16 @@ export default function Recommend() {
   }
 
   return (
-    <AppLayout mainClassName="app-layout__main--farm">
-      <section className="recommend-page">
-        <div className="recommend-page__backdrop" />
-        <div className="recommend-page__content">
-          <div className="recommend-page__intro">
-            <span className="farm-badge">
-              <LeafIcon />
-              Smart field advisory
-            </span>
-            <h1>Recommend a crop</h1>
-            <p>
-              Blend soil nutrients, pH, and field location into a clear crop recommendation
-              for your next planting decision.
-            </p>
-          </div>
+    <AppLayout>
+      <h1 className="mb-1.5 font-display text-[1.5rem] text-slate-900">Recommend a crop</h1>
+      <p className="mb-6 text-[0.9rem] text-slate-600">
+        Enter your soil's N, P, K and pH values along with current weather to get a recommendation.
+      </p>
 
-          <div className="recommend-page__grid">
-            <div className="farm-glass-card recommend-form-card">
-              <div className="farm-card-heading">
-                <span className="farm-card-heading__icon">NPK</span>
-                <div>
-                  <h2>Field readings</h2>
-                  <p>Enter soil values and detect or paste your field coordinates.</p>
-                </div>
-              </div>
-              <SoilForm onSubmit={handlePredict} loading={loading} />
-            </div>
-
-            <RecommendationCard
-              className="farm-glass-card recommend-result-card"
-              crop={result?.crop}
-              confidence={result?.confidence}
-              loading={false}
-            />
-          </div>
-        </div>
-      </section>
+      <div className="max-w-[560px] rounded-[18px] border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_rgba(15,23,42,0.06)]">
+        <SoilForm onSubmit={handlePredict} loading={loading} />
+        <RecommendationCard crop={result?.crop} confidence={result?.confidence} loading={false} />
+      </div>
     </AppLayout>
   );
 }

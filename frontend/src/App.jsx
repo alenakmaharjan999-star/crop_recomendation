@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
 import Landing from './pages/Landing';
@@ -10,6 +10,24 @@ import Recommend from './pages/Recommend';
 import History from './pages/History';
 import Weather from './pages/Weather';
 import Profile from './pages/Profile';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminUsers from './pages/AdminUsers';
+import AdminPredictions from './pages/AdminPredictions';
+import AdminSettings from './pages/AdminSettings';
+
+function AdminRoute({ children }) {
+  const { isAuthenticated, user } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user?.role !== 'Admin') {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+}
 
 function App() {
   return (
@@ -22,23 +40,62 @@ function App() {
 
         <Route
           path="/dashboard"
-          element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
+          element={<Dashboard/>}
+          // element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
         />
         <Route
           path="/recommend"
-          element={<ProtectedRoute><Recommend /></ProtectedRoute>}
+          element={<Recommend/>}
+          // element={<ProtectedRoute><Recommend /></ProtectedRoute>}
         />
         <Route
           path="/history"
-          element={<ProtectedRoute><History /></ProtectedRoute>}
+          element={<History/>}
+          // element={<ProtectedRoute><History /></ProtectedRoute>}
         />
         <Route
           path="/weather"
-          element={<ProtectedRoute><Weather /></ProtectedRoute>}
+          element={<Weather/>}
+          // element={<ProtectedRoute><Weather /></ProtectedRoute>}
         />
         <Route
           path="/profile"
-          element={<ProtectedRoute><Profile /></ProtectedRoute>}
+          element={<Profile/>}
+          // element={<ProtectedRoute><Profile /></ProtectedRoute>}
+        />
+
+        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route
+          path="/admin/dashboard"
+          element={ <AdminDashboard />
+            // <AdminRoute>
+            //   <AdminDashboard />
+            // </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={<AdminUsers />
+            // <AdminRoute>
+            //   <AdminUsers />
+            // </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/predictions"
+          element={<AdminPredictions />
+            // <AdminRoute>
+            //   <AdminPredictions />
+            // </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/settings"
+          element={<AdminSettings />
+            // <AdminRoute>
+            //   <AdminSettings />
+            // </AdminRoute>
+          }
         />
 
         <Route path="*" element={<Navigate to="/" replace />} />
