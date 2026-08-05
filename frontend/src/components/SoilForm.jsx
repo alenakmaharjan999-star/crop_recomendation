@@ -10,20 +10,14 @@ const initialValues = {
   ph: '',
 };
 
-const requiredFields = new Set(['location', 'nitrogen', 'phosphorus', 'potassium', 'ph']);
-
 export default function SoilForm({ onSubmit, loading }) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
-  const [coordinates, setCoordinates] = useState(null);
   const [detectingLocation, setDetectingLocation] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
     setValues((prev) => ({ ...prev, [name]: value }));
-    if (name === 'location') {
-      setCoordinates(null);
-    }
     setErrors((prev) => ({ ...prev, [name]: '' }));
   }
 
@@ -49,11 +43,6 @@ export default function SoilForm({ onSubmit, loading }) {
       errs.ph = 'pH must be between 0 and 14';
     }
 
-    const manualCoordinates = parseCoordinates(values.location);
-    if (!coordinates && !manualCoordinates) {
-      errs.location = 'Detect your location or enter latitude, longitude';
-    }
-
     return errs;
   }
 
@@ -71,15 +60,9 @@ export default function SoilForm({ onSubmit, loading }) {
     setDetectingLocation(true);
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const nextCoordinates = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
-
-        setCoordinates(nextCoordinates);
         setValues((prev) => ({
           ...prev,
-          location: `${nextCoordinates.latitude.toFixed(6)}, ${nextCoordinates.longitude.toFixed(6)}`,
+          location: `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`,
         }));
         setDetectingLocation(false);
       },
@@ -87,7 +70,7 @@ export default function SoilForm({ onSubmit, loading }) {
         setDetectingLocation(false);
         setErrors((prev) => ({
           ...prev,
-          location: 'Could not detect location. Enter latitude, longitude manually.',
+          location: 'Could not detect location.',
         }));
       }
     );
@@ -103,31 +86,32 @@ export default function SoilForm({ onSubmit, loading }) {
       return;
     }
 
-    const manualCoordinates = parseCoordinates(values.location);
-    const submitCoordinates = coordinates || manualCoordinates;
-
     onSubmit({
       nitrogen: Number(values.nitrogen),
       phosphorus: Number(values.phosphorus),
       potassium: Number(values.potassium),
       ph: Number(values.ph),
-      latitude: submitCoordinates.latitude,
-      longitude: submitCoordinates.longitude,
+      location: values.location.trim(),
     });
   }
 
   return (
     <form onSubmit={handleSubmit} noValidate>
       <div className="grid gap-x-4 gap-y-0 md:grid-cols-2">
-        <FormField
-          label="Location"
-          icon={<LocationIcon />}
-          name="location"
-          value={values.location}
-          onChange={handleChange}
-          placeholder="e.g. 27.7172, 85.3240"
-          error={errors.location}
-        />
+        <div>
+          <FormField
+            label="Location"
+            icon={<LocationIcon />}
+            name="location"
+            value={values.location}
+            onChange={handleChange}
+            placeholder="e.g. Kathmandu, Pokhara"
+            error={errors.location}
+          />
+          <p className="mt-[-10px] mb-[18px] text-[0.78rem] text-slate-500">
+            Enter a real place name or city instead of latitude and longitude.
+          </p>
+        </div>
         <FormField
           label="Nitrogen (N)"
           icon="N"
@@ -189,12 +173,6 @@ export default function SoilForm({ onSubmit, loading }) {
         {detectingLocation ? 'Detecting...' : 'Detect my location'}
       </button>
 
-      {coordinates && (
-        <p className="soil-form__detected">
-          Detected location: {coordinates.latitude.toFixed(6)}, {coordinates.longitude.toFixed(6)}
-        </p>
-      )}
-
       <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: 14 }}>
         {loading ? 'Predicting...' : 'Predict crop'}
       </button>
@@ -209,17 +187,4 @@ function LocationIcon() {
       <circle cx="12" cy="9" r="2.5" />
     </svg>
   );
-}
-
-function parseCoordinates(value) {
-  const parts = String(value)
-    .split(',')
-    .map((part) => Number(part.trim()));
-
-  if (parts.length !== 2 || parts.some(Number.isNaN)) return null;
-
-  const [latitude, longitude] = parts;
-  if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) return null;
-
-  return { latitude, longitude };
 }

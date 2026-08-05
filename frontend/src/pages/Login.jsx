@@ -9,7 +9,7 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [form, setForm] = useState({ username: '', password: '' });
   const [fieldErrors, setFieldErrors] = useState({});
   const [bannerError, setBannerError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ export default function Login() {
 
   function validate() {
     const errors = {};
-    if (!form.email.trim()) errors.email = 'Enter your email.';
+    if (!form.username.trim()) errors.username = 'Enter your username.';
     if (!form.password) errors.password = 'Enter your password.';
     return errors;
   }
@@ -39,7 +39,7 @@ export default function Login() {
 
     setLoading(true);
     try {
-      const res = await loginUser({ email: form.email, password: form.password });
+      const res = await loginUser({ username: form.username, password: form.password });
       login(res.data.token, res.data.user);
       navigate('/dashboard');
     } catch (err) {
@@ -63,14 +63,13 @@ export default function Login() {
         {bannerError && <div className="mb-4 rounded-[8px] border border-red-200 bg-red-50 px-3 py-2.5 text-[0.85rem] text-red-500">{bannerError}</div>}
 
         <FormField
-          label="Email"
-          type="email"
-          name="email"
-          value={form.email}
+          label="Username"
+          name="username"
+          value={form.username}
           onChange={handleChange}
-          placeholder="you@example.com"
-          error={fieldErrors.email}
-          autoComplete="email"
+          placeholder="your username"
+          error={fieldErrors.username}
+          autoComplete="username"
         />
 
         <FormField

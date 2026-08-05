@@ -4,6 +4,7 @@ const AuthContext = createContext(null);
 
 const MOCK_TOKEN = 'mock-token-123';
 const MOCK_USER = {
+  username: 'alena',
   fullName: 'Alena Maharjan',
   email: 'alena@test.com',
 };
