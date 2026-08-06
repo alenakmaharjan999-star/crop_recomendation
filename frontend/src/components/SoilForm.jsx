@@ -10,10 +10,9 @@ const initialValues = {
   ph: '',
 };
 
-export default function SoilForm({ onSubmit, loading }) {
+export default function SoilForm({ onSubmit, loading, predictedCrop }) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
-  const [detectingLocation, setDetectingLocation] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -44,36 +43,6 @@ export default function SoilForm({ onSubmit, loading }) {
     }
 
     return errs;
-  }
-
-  function handleDetectLocation() {
-    setErrors((prev) => ({ ...prev, location: '' }));
-
-    if (!navigator.geolocation) {
-      setErrors((prev) => ({
-        ...prev,
-        location: 'Geolocation is not supported by this browser',
-      }));
-      return;
-    }
-
-    setDetectingLocation(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setValues((prev) => ({
-          ...prev,
-          location: `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`,
-        }));
-        setDetectingLocation(false);
-      },
-      () => {
-        setDetectingLocation(false);
-        setErrors((prev) => ({
-          ...prev,
-          location: 'Could not detect location.',
-        }));
-      }
-    );
   }
 
   function handleSubmit(e) {
@@ -165,17 +134,31 @@ export default function SoilForm({ onSubmit, loading }) {
       </div>
 
       <button
-        type="button"
-        onClick={handleDetectLocation}
-        className="mt-3.5 w-full rounded-[10px] bg-gradient-to-b from-[#55A89B] to-[#2F8C7F] px-4 py-3 text-[0.92rem] font-semibold text-white shadow-[0_2px_6px_rgba(47,140,127,0.2)] transition duration-150 ease-out hover:brightness-[0.96] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+        type="submit"
+        className="btn-primary"
         disabled={loading}
+        style={{
+          marginTop: 14,
+          width: '100%',
+          padding: '0.9rem 1.2rem',
+          fontWeight: 700,
+          boxShadow: '0 10px 25px rgba(16, 185, 129, 0.25)',
+        }}
       >
-        {detectingLocation ? 'Detecting...' : 'Detect my location'}
-      </button>
-
-      <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: 14 }}>
         {loading ? 'Predicting...' : 'Predict crop'}
       </button>
+
+      <div className="mt-3">
+        <FormField
+          label="Predicted crop"
+          name="predictedCrop"
+          value={predictedCrop ?? ''}
+          onChange={() => {}}
+          placeholder="Your prediction will appear here"
+          disabled
+          readOnly
+        />
+      </div>
     </form>
   );
 }
