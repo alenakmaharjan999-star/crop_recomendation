@@ -79,7 +79,6 @@ export default function Register() {
     <AuthLayout
       eyebrow="Get started"
       title="Create your account"
-      subtitle="Track soil readings and get crop recommendations."
     >
       <form onSubmit={handleSubmit} noValidate>
         {bannerError && <div className="mb-4 rounded-[8px] border border-red-200 bg-red-50 px-3 py-2.5 text-[0.85rem] text-red-500">{bannerError}</div>}
