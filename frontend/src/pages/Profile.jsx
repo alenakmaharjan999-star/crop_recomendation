@@ -12,7 +12,7 @@ export default function Profile() {
       <div className="max-w-[420px] rounded-[18px] border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_rgba(15,23,42,0.06)]">
         <div className="mb-[18px] flex flex-col">
           <span className="mb-1.5 text-[0.82rem] font-medium text-slate-700">Full name</span>
-          <p className="text-[0.95rem] text-slate-900">{user?.fullName || '—'}</p>
+          <p className="text-[0.95rem] text-slate-900">{user?.fullName || user?.username || '—'}</p>
         </div>
         <div className="flex flex-col">
           <span className="mb-1.5 text-[0.82rem] font-medium text-slate-700">Email</span>

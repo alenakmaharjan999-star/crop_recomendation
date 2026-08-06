@@ -17,9 +17,13 @@ export default function AdminSidebar() {
     navigate('/login');
   }
 
-  const initials = user?.fullName
-    ? user.fullName.split(' ').map((name) => name[0]).slice(0, 2).join('').toUpperCase()
-    : 'A';
+  const displayName = user?.fullName || user?.username || 'Admin';
+  const initials = displayName
+    .split(' ')
+    .map((name) => name[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
 
   return (
     <aside className="sticky top-0 flex min-h-screen w-56 flex-col border-r border-slate-200 bg-white px-4 py-6 text-slate-900 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_30px_rgba(15,23,42,0.05)] lg:w-60">
@@ -48,7 +52,7 @@ export default function AdminSidebar() {
       <div className="mt-3 flex items-center gap-2.5 border-t border-slate-200/80 px-2.5 pt-3.5">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[0.78rem] font-bold text-emerald-600">{initials}</div>
         <div className="min-w-0">
-          <p className="truncate text-[0.82rem] font-semibold text-slate-900">{user?.fullName || 'Admin'}</p>
+          <p className="truncate text-[0.82rem] font-semibold text-slate-900">{displayName}</p>
           <button className="mt-0.5 text-[0.74rem] text-emerald-600 hover:underline" onClick={handleLogout}>Log out</button>
         </div>
       </div>

@@ -76,22 +76,22 @@ apiClient.interceptors.response.use(
 // ---- Auth ----
 export function registerUser(data) {
   return apiClient.post('/auth/register', {
-    username: data.email,
+    username: data.fullName,
     password: data.password,
   });
 }
 
 export async function loginUser(data) {
   const response = await apiClient.post('/auth/login', {
-    username: data.email,
+    username: data.username,
     password: data.password,
   });
 
   response.data = {
     ...response.data,
     user: response.data.user || {
-      email: data.email,
-      fullName: data.email,
+      username: data.username,
+      fullName: data.username,
     },
   };
 
@@ -105,8 +105,7 @@ export async function submitSoilData(data) {
     phosphorus: data.phosphorus,
     potassium: data.potassium,
     ph: data.ph,
-    latitude: data.latitude,
-    longitude: data.longitude,
+    location: data.location,
   };
 
   // TODO: remove mock preview after backend auth is connected.
