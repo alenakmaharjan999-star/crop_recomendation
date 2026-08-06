@@ -1,17 +1,33 @@
 export default function FormField({
   label,
-  icon,
-  type = 'text',
+  type = "text",
   name,
   value,
   onChange,
   placeholder,
   error,
+  required = false,
+  disabled = false,
   ...rest
 }) {
   return (
-    <div className="mb-[18px] flex flex-col">
-      <label htmlFor={name} className="mb-1.5 text-[0.82rem] font-medium text-slate-700">{label}</label>
+    <div className="mb-5">
+
+      {/* Label */}
+
+      <label
+        htmlFor={name}
+        className="mb-2 block text-sm font-medium text-slate-700"
+      >
+        {label}
+
+        {required && (
+          <span className="ml-1 text-red-500">*</span>
+        )}
+      </label>
+
+      {/* Input */}
+
       <input
         id={name}
         name={name}
@@ -19,13 +35,51 @@ export default function FormField({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={[
-          'rounded-[10px] border bg-white px-3 py-[11px] text-[0.92rem] text-slate-900 transition duration-150 ease-out placeholder:text-slate-400 focus:border-emerald-600 focus:bg-white focus:outline-none',
-          error ? 'border-red-400' : 'border-slate-200',
-        ].join(' ')}
+        disabled={disabled}
+        autoComplete={rest.autoComplete}
+        className={`
+          w-full
+          rounded-lg
+          border
+          px-4
+          py-3
+          text-[15px]
+          text-slate-800
+          placeholder:text-slate-400
+          transition-all
+          duration-200
+          outline-none
+
+          ${
+            error
+              ? "border-red-400 focus:border-red-500"
+              : "border-slate-300 focus:border-emerald-600"
+          }
+
+          ${
+            disabled
+              ? "cursor-not-allowed bg-slate-100 text-slate-500"
+              : "bg-white"
+          }
+
+          focus:ring-2
+          ${
+            error
+              ? "focus:ring-red-100"
+              : "focus:ring-emerald-100"
+          }
+        `}
         {...rest}
       />
-      {error && <span className="mt-1 text-[0.78rem] text-red-500">{error}</span>}
+
+      {/* Error Message */}
+
+      {error && (
+        <p className="mt-2 text-sm text-red-500">
+          {error}
+        </p>
+      )}
+
     </div>
   );
 }
