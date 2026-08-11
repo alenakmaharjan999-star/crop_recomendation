@@ -14,7 +14,7 @@ namespace crop.DTOs;
 
 public class RegisterDto
 {
-    // React sends: { "username": "shweta", "password": "abc123" }
-    public string Username { get; set; } = string.Empty;
+    // React sends: { "email": "me@example.com", "password": "abc123" }
+    public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
 }

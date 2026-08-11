@@ -18,7 +18,8 @@ public class User
     public int UserId { get; set; }
 
     // → Username NVARCHAR(50) UNIQUE NOT NULL
-    public string Username { get; set; } = string.Empty;
+    // Now using Email instead of Username
+    public string Email { get; set; } = string.Empty;
 
     // → PasswordHash NVARCHAR(255) NOT NULL
     // Never store plain password — always BCrypt hashed

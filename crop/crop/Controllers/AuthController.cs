@@ -31,14 +31,24 @@ public class AuthController : ControllerBase
     public AuthController(IAuthService auth) => _auth = auth;
 
     // React calls: POST /api/auth/register
-    // Body: { "username": "shweta", "password": "abc123" }
+    // Body: { "email": "me@example.com", "password": "abc123" }
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto dto)
     {
         try
         {
             var user = await _auth.RegisterAsync(dto);
-            return Ok(new { user.UserId, user.Username });
+            var token = await _auth.LoginAsync(new LoginDto
+            {
+                Email = dto.Email,
+                Password = dto.Password
+            });
+
+            return Ok(new
+            {
+                token,
+                user = new { user.UserId, user.Email }
+            });
         }
         catch (Exception ex)
         {

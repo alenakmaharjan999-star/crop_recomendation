@@ -71,7 +71,7 @@ public class PredictionService : IPredictionService
         };
 
         // Step 3: save everything to PredictionHistory table
-        await _predictions.AddAsync(new PredictionHistory
+        var historyRecord = new PredictionHistory
         {
             UserId = userId,
             Nitrogen = dto.Nitrogen,
@@ -83,7 +83,9 @@ public class PredictionService : IPredictionService
             Humidity = humidity,
             Rainfall = rainfall,
             PredictedCrop = result.PredictedCrop
-        });
+        };
+
+        await _predictions.AddAsync(historyRecord);
 
         // Step 4: return to controller → React
         return result;

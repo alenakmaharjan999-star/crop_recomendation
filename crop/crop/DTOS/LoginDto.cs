@@ -7,7 +7,7 @@ namespace crop.DTOs;
 
 public class LoginDto
 {
-    // React sends: { "username": "shweta", "password": "abc123" }
-    public string Username { get; set; } = string.Empty;
+    // React sends: { "email": "me@example.com", "password": "abc123" }
+    public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
 }
