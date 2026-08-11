@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import AppLayout from '../components/AppLayout';
 import StatCard from '../components/StatCard';
-import RecommendationCard from '../components/RecommendationCard';
 import SoilForm from '../components/SoilForm';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -19,6 +18,7 @@ export default function Dashboard() {
   const [weather, setWeather] = useState(null);
   const [history, setHistory] = useState([]);
   const [latest, setLatest] = useState(null);
+  const [predictedCrop, setPredictedCrop] = useState('');
   const [predicting, setPredicting] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(true);
 
@@ -30,7 +30,6 @@ export default function Dashboard() {
     getRecommendationHistory()
       .then((res) => {
         setHistory(res.data || []);
-        if (res.data && res.data.length > 0) setLatest(res.data[0]);
       })
       .catch(() => setHistory([]))
       .finally(() => setLoadingHistory(false));
@@ -38,10 +37,13 @@ export default function Dashboard() {
 
   async function handlePredict(values) {
     setPredicting(true);
+    setPredictedCrop('');
     try {
       const res = await submitSoilData(values);
-      setLatest(res.data);
-      setHistory((prev) => [res.data, ...prev]);
+      const nextPrediction = res.data;
+      setLatest(nextPrediction);
+      setPredictedCrop(nextPrediction?.crop || '');
+      setHistory((prev) => [nextPrediction, ...prev]);
     } catch (err) {
       console.error('Prediction failed', err);
     } finally {
@@ -71,17 +73,6 @@ export default function Dashboard() {
           <p className="mt-1 text-[0.88rem] text-slate-600">{today}</p>
         </div>
 
-        <div className="flex items-center gap-3 rounded-[14px] border border-slate-200 bg-white px-4 py-2.5 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_rgba(15,23,42,0.06)]">
-          <span className="text-[1.6rem]">{weather ? weatherIcon(weather.condition) : '⛅'}</span>
-          <div>
-            <p className="font-display text-[1.3rem] font-semibold text-slate-900">
-              {weather ? `${Math.round(weather.temperature)}°C` : '—'}
-            </p>
-            <p className="text-[0.74rem] leading-[1.4] text-slate-600">
-              Kathmandu{weather ? ` · ${weather.condition}` : ' · loading…'}
-            </p>
-          </div>
-        </div>
 </div>
       <div className="mb-7 grid gap-4 md:grid-cols-3">
         <StatCard
@@ -111,22 +102,12 @@ export default function Dashboard() {
           <SoilForm
             onSubmit={handlePredict}
             loading={predicting}
+            predictedCrop={predictedCrop ?? ''}
             prefill={
               weather
                 ? { temperature: weather.temperature, humidity: weather.humidity }
                 : {}
             }
-          />
-          <StatCard
-            label="Most recommended crop"
-            value={loadingHistory ? '—' : (mostRecommendedCrop || 'None yet')}
-            bandClass="b-humidity"
-          />
-          <StatCard
-            label="Avg. model confidence"
-            value={loadingHistory ? '—' : (avgConfidence != null ? avgConfidence : 'N/A')}
-            unit={avgConfidence != null ? '%' : ''}
-            bandClass="b-rainfall"
           />
         </div>
 

@@ -12,7 +12,7 @@ export default function Login() {
   const { login } = useAuth();
 
   const [form, setForm] = useState({
-    email: "",
+    username: "",
     password: "",
   });
 
@@ -43,12 +43,8 @@ export default function Login() {
   const validate = () => {
     const errors = {};
 
-    if (!form.email.trim()) {
-      errors.email = "Please enter your email.";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(form.email)
-    ) {
-      errors.email = "Enter a valid email address.";
+    if (!form.username.trim()) {
+      errors.username = "Please enter your username.";
     }
 
     if (!form.password.trim()) {
@@ -72,7 +68,7 @@ export default function Login() {
 
     try {
       const response = await loginUser({
-        email: form.email,
+        username: form.username,
         password: form.password,
       });
 
@@ -81,7 +77,7 @@ export default function Login() {
       navigate("/dashboard");
     } catch (err) {
       if (err.response?.status === 401) {
-        setBannerError("Incorrect email or password.");
+        setBannerError("Incorrect username or password.");
       } else {
         setBannerError("Unable to sign in. Please try again.");
       }
@@ -104,15 +100,15 @@ export default function Login() {
         )}
 
         <FormField
-          label="Email Address"
-          type="email"
-          name="email"
-          value={form.email}
+          label="Username"
+          type="text"
+          name="username"
+          value={form.username}
           onChange={handleChange}
-          placeholder="Enter your email"
-          autoComplete="email"
+          placeholder="Enter your username"
+          autoComplete="username"
           required
-          error={fieldErrors.email}
+          error={fieldErrors.username}
         />
 
         <FormField

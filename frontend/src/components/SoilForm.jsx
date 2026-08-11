@@ -10,20 +10,13 @@ const initialValues = {
   ph: '',
 };
 
-const requiredFields = new Set(['location', 'nitrogen', 'phosphorus', 'potassium', 'ph']);
-
-export default function SoilForm({ onSubmit, loading }) {
+export default function SoilForm({ onSubmit, loading, predictedCrop }) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
-  const [coordinates, setCoordinates] = useState(null);
-  const [detectingLocation, setDetectingLocation] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
     setValues((prev) => ({ ...prev, [name]: value }));
-    if (name === 'location') {
-      setCoordinates(null);
-    }
     setErrors((prev) => ({ ...prev, [name]: '' }));
   }
 
@@ -49,48 +42,7 @@ export default function SoilForm({ onSubmit, loading }) {
       errs.ph = 'pH must be between 0 and 14';
     }
 
-    const manualCoordinates = parseCoordinates(values.location);
-    if (!coordinates && !manualCoordinates) {
-      errs.location = 'Detect your location or enter latitude, longitude';
-    }
-
     return errs;
-  }
-
-  function handleDetectLocation() {
-    setErrors((prev) => ({ ...prev, location: '' }));
-
-    if (!navigator.geolocation) {
-      setErrors((prev) => ({
-        ...prev,
-        location: 'Geolocation is not supported by this browser',
-      }));
-      return;
-    }
-
-    setDetectingLocation(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const nextCoordinates = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
-
-        setCoordinates(nextCoordinates);
-        setValues((prev) => ({
-          ...prev,
-          location: `${nextCoordinates.latitude.toFixed(6)}, ${nextCoordinates.longitude.toFixed(6)}`,
-        }));
-        setDetectingLocation(false);
-      },
-      () => {
-        setDetectingLocation(false);
-        setErrors((prev) => ({
-          ...prev,
-          location: 'Could not detect location. Enter latitude, longitude manually.',
-        }));
-      }
-    );
   }
 
   function handleSubmit(e) {
@@ -103,31 +55,32 @@ export default function SoilForm({ onSubmit, loading }) {
       return;
     }
 
-    const manualCoordinates = parseCoordinates(values.location);
-    const submitCoordinates = coordinates || manualCoordinates;
-
     onSubmit({
       nitrogen: Number(values.nitrogen),
       phosphorus: Number(values.phosphorus),
       potassium: Number(values.potassium),
       ph: Number(values.ph),
-      latitude: submitCoordinates.latitude,
-      longitude: submitCoordinates.longitude,
+      location: values.location.trim(),
     });
   }
 
   return (
     <form onSubmit={handleSubmit} noValidate>
       <div className="grid gap-x-4 gap-y-0 md:grid-cols-2">
-        <FormField
-          label="Location"
-          icon={<LocationIcon />}
-          name="location"
-          value={values.location}
-          onChange={handleChange}
-          placeholder="e.g. 27.7172, 85.3240"
-          error={errors.location}
-        />
+        <div>
+          <FormField
+            label="Location"
+            icon={<LocationIcon />}
+            name="location"
+            value={values.location}
+            onChange={handleChange}
+            placeholder="e.g. Kathmandu, Pokhara"
+            error={errors.location}
+          />
+          <p className="mt-[-10px] mb-[18px] text-[0.78rem] text-slate-500">
+            Enter a real place name or city instead of latitude and longitude.
+          </p>
+        </div>
         <FormField
           label="Nitrogen (N)"
           icon="N"
@@ -181,23 +134,31 @@ export default function SoilForm({ onSubmit, loading }) {
       </div>
 
       <button
-        type="button"
-        onClick={handleDetectLocation}
-        className="mt-3.5 w-full rounded-[10px] bg-gradient-to-b from-[#55A89B] to-[#2F8C7F] px-4 py-3 text-[0.92rem] font-semibold text-white shadow-[0_2px_6px_rgba(47,140,127,0.2)] transition duration-150 ease-out hover:brightness-[0.96] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+        type="submit"
+        className="btn-primary"
         disabled={loading}
+        style={{
+          marginTop: 14,
+          width: '100%',
+          padding: '0.9rem 1.2rem',
+          fontWeight: 700,
+          boxShadow: '0 10px 25px rgba(16, 185, 129, 0.25)',
+        }}
       >
-        {detectingLocation ? 'Detecting...' : 'Detect my location'}
-      </button>
-
-      {coordinates && (
-        <p className="soil-form__detected">
-          Detected location: {coordinates.latitude.toFixed(6)}, {coordinates.longitude.toFixed(6)}
-        </p>
-      )}
-
-      <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: 14 }}>
         {loading ? 'Predicting...' : 'Predict crop'}
       </button>
+
+      <div className="mt-3">
+        <FormField
+          label="Predicted crop"
+          name="predictedCrop"
+          value={predictedCrop ?? ''}
+          onChange={() => {}}
+          placeholder="Your prediction will appear here"
+          disabled
+          readOnly
+        />
+      </div>
     </form>
   );
 }
@@ -209,17 +170,4 @@ function LocationIcon() {
       <circle cx="12" cy="9" r="2.5" />
     </svg>
   );
-}
-
-function parseCoordinates(value) {
-  const parts = String(value)
-    .split(',')
-    .map((part) => Number(part.trim()));
-
-  if (parts.length !== 2 || parts.some(Number.isNaN)) return null;
-
-  const [latitude, longitude] = parts;
-  if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) return null;
-
-  return { latitude, longitude };
 }
