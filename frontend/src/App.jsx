@@ -10,10 +10,10 @@ import Recommend from './pages/Recommend';
 import History from './pages/History';
 import Weather from './pages/Weather';
 import Profile from './pages/Profile';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminUsers from './pages/AdminUsers';
-import AdminPredictions from './pages/AdminPredictions';
-import AdminSettings from './pages/AdminSettings';
+import AdminDashboard from './admin/pages/AdminDashboard';
+import AdminUsers from './admin/pages/AdminUsers';
+import AdminPredictions from './admin/pages/AdminPredictions';
+import AdminReports from './admin/pages/AdminReports';
 
 function AdminRoute({ children }) {
   const { isAuthenticated, user } = useAuth();
@@ -90,8 +90,8 @@ function App() {
           }
         />
         <Route
-          path="/admin/settings"
-          element={<AdminSettings />
+          path="/admin/reports"
+          element={<AdminReports />
             // <AdminRoute>
             //   <AdminSettings />
             // </AdminRoute>
