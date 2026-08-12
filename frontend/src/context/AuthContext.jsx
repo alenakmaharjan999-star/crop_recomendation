@@ -2,17 +2,21 @@ import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
 
-const MOCK_TOKEN = 'mock-token-123';
-const MOCK_USER = {
-  username: 'alena',
-  fullName: 'Alena Maharjan',
-  email: 'alena@test.com',
-};
+function getStoredUser() {
+  const storedUser = localStorage.getItem('user');
+  if (!storedUser) return null;
+
+  try {
+    return JSON.parse(storedUser);
+  } catch {
+    localStorage.removeItem('user');
+    return null;
+  }
+}
 
 export function AuthProvider({ children }) {
-  // TODO: remove mock preview after backend auth is connected.
-  const [token, setToken] = useState(MOCK_TOKEN);
-  const [user, setUser] = useState(MOCK_USER);
+  const [token, setToken] = useState(() => localStorage.getItem('token'));
+  const [user, setUser] = useState(getStoredUser);
 
   useEffect(() => {
     if (token) {
@@ -32,9 +36,13 @@ export function AuthProvider({ children }) {
 
   function login(newToken, userData) {
     setToken(newToken);
-    setUser(userData);
+    setUser(userData || null);
     localStorage.setItem('token', newToken);
-    localStorage.setItem('user', JSON.stringify(userData));
+    if (userData) {
+      localStorage.setItem('user', JSON.stringify(userData));
+    } else {
+      localStorage.removeItem('user');
+    }
   }
 
   function logout() {

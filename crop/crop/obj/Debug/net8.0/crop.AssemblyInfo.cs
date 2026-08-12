@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("crop")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8536b5641369adbb034252ae273ad43aa9e8f491")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ff49c520275b1e66c0472ece6f93e754ac25d246")]
 [assembly: System.Reflection.AssemblyProductAttribute("crop")]
 [assembly: System.Reflection.AssemblyTitleAttribute("crop")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

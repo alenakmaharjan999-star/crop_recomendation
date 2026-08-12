@@ -26,13 +26,14 @@ export default function Sidebar() {
     navigate('/login');
   }
 
-  const displayName = user?.fullName || user?.username || 'User';
+  const displayName = user?.username || '';
   const initials = displayName
     .split(' ')
+    .filter(Boolean)
     .map((n) => n[0])
     .slice(0, 2)
     .join('')
-    .toUpperCase();
+    .toUpperCase() || '?';
 
   return (
     <aside className="sticky top-0 flex min-h-screen w-56 flex-col border-r border-slate-200 bg-white px-4 py-6 text-slate-900 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_30px_rgba(15,23,42,0.05)] lg:w-60">
@@ -85,7 +86,7 @@ export default function Sidebar() {
         </div>
 
         <div className="min-w-0">
-          <p className="truncate text-[0.82rem] font-semibold text-slate-900">{displayName}</p>
+          <p className="truncate text-[0.82rem] font-semibold text-slate-900">{displayName || '—'}</p>
           <button className="mt-0.5 text-[0.74rem] text-emerald-600 hover:underline" onClick={handleLogout}>Log out</button>
         </div>
 

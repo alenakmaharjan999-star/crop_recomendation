@@ -64,7 +64,6 @@ export const users = [
   {
     id: 1,
     username: "Ram Sharma",
-    email: "ram@example.com",
     predictions: 18,
     joined: "Aug 01, 2026",
     status: "Active",
@@ -72,7 +71,6 @@ export const users = [
   {
     id: 2,
     username: "Sita Thapa",
-    email: "sita@example.com",
     predictions: 12,
     joined: "Aug 03, 2026",
     status: "Active",
@@ -80,7 +78,6 @@ export const users = [
   {
     id: 3,
     username: "Hari KC",
-    email: "hari@example.com",
     predictions: 24,
     joined: "Aug 04, 2026",
     status: "Active",
@@ -88,7 +85,6 @@ export const users = [
   {
     id: 4,
     username: "Mina Gurung",
-    email: "mina@example.com",
     predictions: 9,
     joined: "Aug 06, 2026",
     status: "Inactive",

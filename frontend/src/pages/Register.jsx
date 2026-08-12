@@ -3,13 +3,14 @@ import { useNavigate, Link } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 import FormField from '../components/FormField';
 import { registerUser } from '../api/apiClient';
+import { useAuth } from '../context/AuthContext';
 
 export default function Register() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [form, setForm] = useState({
-    fullName: '',
-    email: '',
+    username: '',
     password: '',
     confirmPassword: '',
   });
@@ -25,12 +26,10 @@ export default function Register() {
 
   function validate() {
     const errors = {};
-    if (!form.fullName.trim()) errors.fullName = 'Enter your full name.';
-
-    if (!form.email.trim()) {
-      errors.email = 'Enter your email.';
-    } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
-      errors.email = 'Enter a valid email address.';
+    if (!form.username.trim()) {
+      errors.username = 'Enter your username.';
+    } else if (form.username.trim().length > 100) {
+      errors.username = 'Username must be 100 characters or fewer.';
     }
 
     if (!form.password) {
@@ -58,15 +57,18 @@ export default function Register() {
 
     setLoading(true);
     try {
-      await registerUser({
-        fullName: form.fullName,
-        email: form.email,
+      const response = await registerUser({
+        username: form.username,
         password: form.password,
+        confirmPassword: form.confirmPassword,
       });
-      navigate('/login', { state: { registered: true } });
+
+      login(response.data.token, response.data.user);
+      navigate('/dashboard');
     } catch (err) {
-      if (err.response && err.response.status === 409) {
-        setBannerError('An account with this email already exists.');
+      const serverError = err.response?.data?.error || '';
+      if (err.response?.status === 409 && serverError.toLowerCase().includes('username')) {
+        setBannerError('That username is already taken.');
       } else {
         setBannerError('Could not create your account. Please try again.');
       }
@@ -84,24 +86,13 @@ export default function Register() {
         {bannerError && <div className="mb-4 rounded-[8px] border border-red-200 bg-red-50 px-3 py-2.5 text-[0.85rem] text-red-500">{bannerError}</div>}
 
         <FormField
-          label="Full name"
-          name="fullName"
-          value={form.fullName}
+          label="Username"
+          name="username"
+          value={form.username}
           onChange={handleChange}
-          placeholder="Enter your name "
-          error={fieldErrors.fullName}
-          autoComplete="name"
-        />
-
-        <FormField
-          label="Email"
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          placeholder="you@example.com"
-          error={fieldErrors.email}
-          autoComplete="email"
+          placeholder="Enter your username"
+          error={fieldErrors.username}
+          autoComplete="username"
         />
 
         <FormField

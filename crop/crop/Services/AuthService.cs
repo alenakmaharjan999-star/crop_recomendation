@@ -13,10 +13,12 @@ using System.Text;
 
 namespace crop.Services;
 
+public record AuthResult(string Token, User User);
+
     public interface IAuthService
     {
         Task<User> RegisterAsync(RegisterDto dto);
-        Task<string> LoginAsync(LoginDto dto);
+        Task<AuthResult> LoginAsync(LoginDto dto);
     }
 
 public class AuthService : IAuthService
@@ -30,32 +32,52 @@ public class AuthService : IAuthService
 
     public async Task<User> RegisterAsync(RegisterDto dto)
     {
-        // Check if email already exists
-        var existing = await _users.GetByEmailAsync(dto.Email);
-        if (existing != null) throw new Exception("Email already taken");
+        if (string.IsNullOrWhiteSpace(dto.Username))
+            throw new Exception("Username is required");
+
+        if (dto.Username.Trim().Length > 100)
+            throw new Exception("Username must be 100 characters or fewer");
+
+        if (string.IsNullOrWhiteSpace(dto.Password))
+            throw new Exception("Password is required");
+
+        if (dto.Password != dto.ConfirmPassword)
+            throw new Exception("Passwords do not match");
+
+        var normalizedUsername = dto.Username.Trim();
+
+        var existingUsername = await _users.GetByUsernameAsync(normalizedUsername);
+        if (existingUsername != null) throw new Exception("Username already taken");
 
         // Hash password with BCrypt, save to DB
         var user = new User
         {
-            Email = dto.Email,
+            Username = normalizedUsername,
             PasswordHash = _password.Hash(dto.Password)
         };
         await _users.AddAsync(user);
         return user;
     }
 
-    public async Task<string> LoginAsync(LoginDto dto)
+    public async Task<AuthResult> LoginAsync(LoginDto dto)
     {
-        // Find user in DB, verify password
-        var user = await _users.GetByEmailAsync(dto.Email);
-        if (user == null || !_password.Verify(dto.Password, user.PasswordHash))
+        if (string.IsNullOrWhiteSpace(dto.Username))
+            throw new Exception("Username is required");
+
+        if (string.IsNullOrWhiteSpace(dto.Password))
+            throw new Exception("Password is required");
+
+        var user = await _users.GetByUsernameAsync(dto.Username.Trim());
+        if (user == null)
+            throw new Exception("User not found");
+
+        if (!_password.Verify(dto.Password, user.PasswordHash))
             throw new Exception("Invalid credentials");
 
-        // Build JWT token with UserId and Email
+        // Build JWT token with UserId and Username
         var claims = new[] {
             new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-            new Claim(ClaimTypes.Name, user.Email),
-            new Claim(ClaimTypes.Email, user.Email)
+            new Claim(ClaimTypes.Name, user.Username)
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -65,6 +87,7 @@ public class AuthService : IAuthService
             expires: DateTime.UtcNow.AddDays(7),
             signingCredentials: creds);
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
+        return new AuthResult(tokenValue, user);
     }
 }

@@ -74,11 +74,21 @@ apiClient.interceptors.response.use(
 );
 
 // ---- Auth ----
-export function registerUser(data) {
-  return apiClient.post('/auth/register', {
-    username: data.fullName,
+export async function registerUser(data) {
+  const response = await apiClient.post('/auth/register', {
+    username: data.username,
     password: data.password,
+    confirmPassword: data.confirmPassword,
   });
+
+  // Normalize server user object to use lowercase keys
+  const srvUser = response.data.user || {};
+  response.data.user = {
+    userId: srvUser.userId ?? srvUser.UserId,
+    username: srvUser.username ?? srvUser.Username ?? data.username,
+  };
+
+  return response;
 }
 
 export async function loginUser(data) {
@@ -87,12 +97,11 @@ export async function loginUser(data) {
     password: data.password,
   });
 
-  response.data = {
-    ...response.data,
-    user: response.data.user || {
-      username: data.username,
-      fullName: data.username,
-    },
+  // Normalize server user object to use lowercase keys
+  const srvUser = response.data.user || {};
+  response.data.user = {
+    userId: srvUser.userId ?? srvUser.UserId,
+    username: srvUser.username ?? srvUser.Username ?? data.username,
   };
 
   return response;

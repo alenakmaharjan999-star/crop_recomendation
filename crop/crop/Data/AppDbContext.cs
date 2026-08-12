@@ -24,9 +24,13 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<PredictionHistory>()
             .HasKey(p => p.PredictionId);
 
-        // Unique email
         modelBuilder.Entity<User>()
-            .HasIndex(u => u.Email)
+            .Property(u => u.Username)
+            .HasMaxLength(100)
+            .IsRequired();
+
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Username)
             .IsUnique();
 
         // FK relationship

@@ -61,9 +61,6 @@ export default function Users() {
                           {user.username}
                         </p>
 
-                        <p className="text-xs text-gray-500">
-                          {user.email}
-                        </p>
                       </div>
                     </div>
                   </td>

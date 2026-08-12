@@ -31,27 +31,34 @@ public class AuthController : ControllerBase
     public AuthController(IAuthService auth) => _auth = auth;
 
     // React calls: POST /api/auth/register
-    // Body: { "email": "me@example.com", "password": "abc123" }
+    // Body: { "username": "alena", "password": "abc123", "confirmPassword": "abc123" }
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto dto)
     {
         try
         {
             var user = await _auth.RegisterAsync(dto);
-            var token = await _auth.LoginAsync(new LoginDto
+            var authResult = await _auth.LoginAsync(new LoginDto
             {
-                Email = dto.Email,
+                Username = dto.Username,
                 Password = dto.Password
             });
 
             return Ok(new
             {
-                token,
-                user = new { user.UserId, user.Email }
+                token = authResult.Token,
+                user = new
+                {
+                    userId = user.UserId,
+                    username = user.Username
+                }
             });
         }
         catch (Exception ex)
         {
+            if (ex.Message.Contains("taken", StringComparison.OrdinalIgnoreCase))
+                return Conflict(new { error = ex.Message });
+
             return BadRequest(new { error = ex.Message });
         }
     }
@@ -64,8 +71,16 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var token = await _auth.LoginAsync(dto);
-            return Ok(new { token });
+            var authResult = await _auth.LoginAsync(dto);
+                    return Ok(new
+                    {
+                        token = authResult.Token,
+                        user = new
+                        {
+                            userId = authResult.User.UserId,
+                            username = authResult.User.Username
+                        }
+                    });
         }
         catch (Exception ex)
         {

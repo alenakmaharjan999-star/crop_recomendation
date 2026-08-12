@@ -10,7 +10,7 @@ namespace crop.Repositories;
 
 public interface IUserRepository
 {
-    Task<User?> GetByEmailAsync(string email);
+    Task<User?> GetByUsernameAsync(string username);
     Task AddAsync(User user);
 }
 
@@ -21,8 +21,8 @@ public class UserRepository : IUserRepository
 
     // Used by AuthService.LoginAsync and RegisterAsync
     // Returns null if user not found
-    public Task<User?> GetByEmailAsync(string email)
-        => _db.Users.FirstOrDefaultAsync(u => u.Email == email);
+    public Task<User?> GetByUsernameAsync(string username)
+        => _db.Users.FirstOrDefaultAsync(u => u.Username == username);
 
     // Inserts new row into Users table
     public async Task AddAsync(User user)

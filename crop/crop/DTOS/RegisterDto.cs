@@ -7,14 +7,15 @@
 
 // DTOs/RegisterDto.cs
 // DTO = Data Transfer Object
-// This is the shape of JSON React sends to /api/auth/register
+// Shape of JSON React sends to /api/auth/register
 // We NEVER expose the User model directly to React
 
 namespace crop.DTOs;
 
 public class RegisterDto
 {
-    // React sends: { "email": "me@example.com", "password": "abc123" }
-    public string Email { get; set; } = string.Empty;
+    // React sends: { "username": "alena", "password": "abc123", "confirmPassword": "abc123" }
+    public string Username { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
+    public string ConfirmPassword { get; set; } = string.Empty;
 }
