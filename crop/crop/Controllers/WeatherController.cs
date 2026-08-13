@@ -1,4 +1,5 @@
 ﻿using crop.Services;
+using crop.Validation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace crop.Controllers;
@@ -14,13 +15,19 @@ public class WeatherController : ControllerBase
     [HttpGet("current")]
     public async Task<IActionResult> Current([FromQuery] string location = "Kathmandu")
     {
+        if (!LocationCatalog.TryNormalize(location, out var normalized))
+            return BadRequest(new
+            {
+                error = $"'{location}' is not a recognised district or city."
+            });
+
         try
         {
-            var (temperature, humidity, rainfall) = await _weather.GetWeatherAsync(location);
+            var (temperature, humidity, rainfall) = await _weather.GetWeatherAsync(normalized);
 
             return Ok(new
             {
-                location,
+                location = normalized,
                 temperature,
                 humidity,
                 rainfall,

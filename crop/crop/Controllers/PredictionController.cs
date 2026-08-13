@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using crop.DTOs;
 using crop.Services;
+using crop.Validation;
 using System.Security.Claims;
 
 namespace EKrishiAPI.Controllers;
@@ -44,6 +45,21 @@ public class PredictionController : ControllerBase
     [HttpPost("predict")]
     public async Task<IActionResult> Predict(PredictRequestDto dto)
     {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState
+                .Where(entry => entry.Value?.Errors.Count > 0)
+                .ToDictionary(
+                    entry => entry.Key,
+                    entry => entry.Value!.Errors.Select(e => e.ErrorMessage).ToArray());
+
+            return BadRequest(new { error = "Invalid prediction input.", errors });
+        }
+
+        // Store the canonical spelling of the location instead of raw user text
+        LocationCatalog.TryNormalize(dto.Location, out var location);
+        dto.Location = location;
+
         try
         {
             var result = await _predictions.PredictAsync(dto, GetUserId());
@@ -62,6 +78,11 @@ public class PredictionController : ControllerBase
         var history = await _predictions.GetHistoryAsync(GetUserId());
         return Ok(history);
     }
+
+    // Locations the prediction form is allowed to submit
+    [HttpGet("locations")]
+    [AllowAnonymous]
+    public IActionResult Locations() => Ok(LocationCatalog.Locations);
 
     // Reads UserId from the JWT token (set during login)
     private int GetUserId()

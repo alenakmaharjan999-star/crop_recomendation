@@ -9,6 +9,7 @@
 using crop.DTOs;
 using crop.Models;
 using crop.Repositories;
+using crop.Validation;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -34,7 +35,10 @@ public class PredictionService : IPredictionService
 
     public async Task<PredictResponseDto> PredictAsync(PredictRequestDto dto, int userId)
     {
-        var location = string.IsNullOrWhiteSpace(dto.Location) ? "Kathmandu" : dto.Location;
+        if (!LocationCatalog.TryNormalize(dto.Location, out var location))
+            throw new ArgumentException(
+                $"'{dto.Location}' is not a recognised district or city.", nameof(dto));
+
         var temperature = dto.Temperature;
         var humidity = dto.Humidity;
         var rainfall = dto.Rainfall;

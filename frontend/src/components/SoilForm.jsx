@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import FormField from './FormField';
+import { SOIL_RANGES, validateSoilValue } from '../constants/soilRanges';
+import { VALID_LOCATIONS, normalizeLocation, validateLocation } from '../constants/locations';
 import './Forms.css';
 
 const initialValues = {
@@ -23,24 +25,13 @@ export default function SoilForm({ onSubmit, loading, predictedCrop }) {
   function validate() {
     const errs = {};
 
-    ['nitrogen', 'phosphorus', 'potassium', 'ph'].forEach((field) => {
-      const value = values[field];
-      const isEmpty = String(value).trim() === '';
-
-      if (isEmpty) {
-        errs[field] = 'Required';
-      } else if (Number.isNaN(Number(value))) {
-        errs[field] = 'Must be a number';
-      }
+    Object.keys(SOIL_RANGES).forEach((field) => {
+      const message = validateSoilValue(field, values[field]);
+      if (message) errs[field] = message;
     });
 
-    if (!values.location.trim()) {
-      errs.location = 'Required';
-    }
-
-    if (values.ph !== '' && (Number(values.ph) < 0 || Number(values.ph) > 14)) {
-      errs.ph = 'pH must be between 0 and 14';
-    }
+    const locationError = validateLocation(values.location);
+    if (locationError) errs.location = locationError;
 
     return errs;
   }
@@ -60,7 +51,7 @@ export default function SoilForm({ onSubmit, loading, predictedCrop }) {
       phosphorus: Number(values.phosphorus),
       potassium: Number(values.potassium),
       ph: Number(values.ph),
-      location: values.location.trim(),
+      location: normalizeLocation(values.location),
     });
   }
 
@@ -76,9 +67,11 @@ export default function SoilForm({ onSubmit, loading, predictedCrop }) {
             onChange={handleChange}
             placeholder="e.g. Kathmandu, Pokhara"
             error={errors.location}
+            options={VALID_LOCATIONS}
+            autoComplete="off"
           />
           <p className="mt-[-10px] mb-[18px] text-[0.78rem] text-slate-500">
-            Enter a real place name or city instead of latitude and longitude.
+            Choose a district or city from the suggestion list.
           </p>
         </div>
         <FormField
@@ -88,9 +81,12 @@ export default function SoilForm({ onSubmit, loading, predictedCrop }) {
           name="nitrogen"
           value={values.nitrogen}
           onChange={handleChange}
-          placeholder="e.g. 90"
+          placeholder={`${SOIL_RANGES.nitrogen.min} - ${SOIL_RANGES.nitrogen.max}`}
           error={errors.nitrogen}
           inputMode="decimal"
+          min={SOIL_RANGES.nitrogen.min}
+          max={SOIL_RANGES.nitrogen.max}
+          step={SOIL_RANGES.nitrogen.step}
         />
 
         <FormField
@@ -100,9 +96,12 @@ export default function SoilForm({ onSubmit, loading, predictedCrop }) {
           name="phosphorus"
           value={values.phosphorus}
           onChange={handleChange}
-          placeholder="e.g. 42"
+          placeholder={`${SOIL_RANGES.phosphorus.min} - ${SOIL_RANGES.phosphorus.max}`}
           error={errors.phosphorus}
           inputMode="decimal"
+          min={SOIL_RANGES.phosphorus.min}
+          max={SOIL_RANGES.phosphorus.max}
+          step={SOIL_RANGES.phosphorus.step}
         />
 
         <FormField
@@ -112,9 +111,12 @@ export default function SoilForm({ onSubmit, loading, predictedCrop }) {
           name="potassium"
           value={values.potassium}
           onChange={handleChange}
-          placeholder="e.g. 43"
+          placeholder={`${SOIL_RANGES.potassium.min} - ${SOIL_RANGES.potassium.max}`}
           error={errors.potassium}
           inputMode="decimal"
+          min={SOIL_RANGES.potassium.min}
+          max={SOIL_RANGES.potassium.max}
+          step={SOIL_RANGES.potassium.step}
         />
 
         <FormField
@@ -124,12 +126,12 @@ export default function SoilForm({ onSubmit, loading, predictedCrop }) {
           name="ph"
           value={values.ph}
           onChange={handleChange}
-          placeholder="0 - 14"
+          placeholder={`${SOIL_RANGES.ph.min} - ${SOIL_RANGES.ph.max}`}
           error={errors.ph}
           inputMode="decimal"
-          min="0"
-          max="14"
-          step="0.1"
+          min={SOIL_RANGES.ph.min}
+          max={SOIL_RANGES.ph.max}
+          step={SOIL_RANGES.ph.step}
         />
       </div>
 
