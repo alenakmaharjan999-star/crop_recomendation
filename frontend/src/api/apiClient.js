@@ -7,52 +7,6 @@ const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-const mockRecommendationHistory = [
-  {
-    id: 1,
-    crop: 'Rice',
-    confidence: 0.91,
-    nitrogen: 90,
-    phosphorus: 42,
-    potassium: 43,
-    ph: 6.5,
-    temperature: 29,
-    humidity: 78,
-    rainfall: 220,
-    date: '2026-07-30T09:15:00',
-  },
-  {
-    id: 2,
-    crop: 'Maize',
-    confidence: 0.86,
-    nitrogen: 72,
-    phosphorus: 38,
-    potassium: 36,
-    ph: 6.8,
-    temperature: 27,
-    humidity: 70,
-    rainfall: 145,
-    date: '2026-07-22T14:30:00',
-  },
-  {
-    id: 3,
-    crop: 'Wheat',
-    confidence: 0.82,
-    nitrogen: 64,
-    phosphorus: 45,
-    potassium: 30,
-    ph: 7.1,
-    temperature: 23,
-    humidity: 62,
-    rainfall: 90,
-    date: '2026-07-12T11:05:00',
-  },
-];
-
-function mockResponse(data) {
-  return Promise.resolve({ data });
-}
-
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -110,25 +64,20 @@ export async function loginUser(data) {
 // ---- Soil / recommendation ----
 export async function submitSoilData(data) {
   const payload = {
-    nitrogen: data.nitrogen,
-    phosphorus: data.phosphorus,
-    potassium: data.potassium,
-    ph: data.ph,
+    nitrogen: Number(data.nitrogen),
+    phosphorus: Number(data.phosphorus),
+    potassium: Number(data.potassium),
+    ph: Number(data.ph),
     location: data.location,
   };
 
-  // TODO: remove mock preview after backend auth is connected.
-  return mockResponse(
-    normalizePrediction(
-      {
-        id: Date.now(),
-        crop: 'Rice',
-        confidence: 0.91,
-        date: new Date().toISOString(),
-      },
-      payload
-    )
-  );
+  const response = await apiClient.post('/prediction/predict', payload);
+  response.data = normalizePrediction(response.data, {
+    ...payload,
+    date: new Date().toISOString(),
+  });
+
+  return response;
 }
 
 export async function getLatestRecommendation() {
@@ -138,18 +87,23 @@ export async function getLatestRecommendation() {
 }
 
 export async function getRecommendationHistory() {
-  // TODO: remove mock preview after backend auth is connected.
-  return mockResponse(mockRecommendationHistory.map(normalizePrediction));
+  const response = await apiClient.get('/prediction/history');
+  const items = Array.isArray(response.data) ? response.data : [];
+  response.data = items
+    .map((item) => normalizePrediction(item))
+    .sort((a, b) => new Date(b.date ?? 0) - new Date(a.date ?? 0));
+
+  return response;
+}
+
+export async function getValidLocations() {
+  const response = await apiClient.get('/prediction/locations');
+  return response;
 }
 
 // ---- Weather ----
-export function getCurrentWeather() {
-  // TODO: remove mock preview after backend auth is connected.
-  return mockResponse({
-    temperature: 29,
-    humidity: 78,
-    condition: 'Partly cloudy',
-  });
+export function getCurrentWeather(location = 'Kathmandu') {
+  return apiClient.get('/weather/current', { params: { location } });
 }
 
 function normalizePrediction(item, fallback = {}) {
@@ -157,9 +111,9 @@ function normalizePrediction(item, fallback = {}) {
 
   return {
     ...item,
-    id: item.id ?? item.predictionId,
+    id: item.id ?? item.predictionId ?? fallback.id,
     crop: item.crop ?? item.predictedCrop,
-    date: item.date ?? item.createdAt,
+    date: item.date ?? item.createdAt ?? fallback.date,
     confidence:
       item.confidence != null && item.confidence > 1
         ? item.confidence / 100

@@ -39,6 +39,9 @@ public class PredictionHistory
     // Result from Python ML model
     public string PredictedCrop { get; set; } = string.Empty;
 
+    // Model probability for the predicted crop (0..1)
+    public float Confidence { get; set; }
+
     // → CreatedAt DATETIME DEFAULT GETDATE()
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

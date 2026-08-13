@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [latest, setLatest] = useState(null);
   const [predictedCrop, setPredictedCrop] = useState('');
   const [predicting, setPredicting] = useState(false);
+  const [predictError, setPredictError] = useState('');
   const [loadingHistory, setLoadingHistory] = useState(true);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export default function Dashboard() {
   async function handlePredict(values) {
     setPredicting(true);
     setPredictedCrop('');
+    setPredictError('');
     try {
       const res = await submitSoilData(values);
       const nextPrediction = res.data;
@@ -45,7 +47,9 @@ export default function Dashboard() {
       setPredictedCrop(nextPrediction?.crop || '');
       setHistory((prev) => [nextPrediction, ...prev]);
     } catch (err) {
-      console.error('Prediction failed', err);
+      const data = err.response?.data;
+      const fieldErrors = data?.errors ? Object.values(data.errors).flat() : [];
+      setPredictError(fieldErrors[0] || data?.error || 'Prediction failed. Please try again.');
     } finally {
       setPredicting(false);
     }
@@ -109,6 +113,17 @@ export default function Dashboard() {
                 : {}
             }
           />
+          {predictError && (
+            <p className="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+              {predictError}
+            </p>
+          )}
+          {latest?.crop && (
+            <p className="mt-3 text-[0.84rem] text-slate-600">
+              Latest: <span className="font-semibold text-slate-900">{latest.crop}</span>
+              {latest.confidence != null && ` · ${Math.round(latest.confidence * 100)}% confidence`}
+            </p>
+          )}
         </div>
 
         <div className="rounded-[18px] border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_rgba(15,23,42,0.06)]">

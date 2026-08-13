@@ -3,7 +3,7 @@
 // rounded to standard agricultural limits.
 export const SOIL_RANGES = {
   nitrogen: { label: 'Nitrogen (N)', min: 0, max: 140, unit: 'kg/ha', step: 1 },
-  phosphorus: { label: 'Phosphorus (P)', min: 0, max: 145, unit: 'kg/ha', step: 1 },
+  phosphorus: { label: 'Phosphorus (P)', min: 0, max: 140, unit: 'kg/ha', step: 1 },
   potassium: { label: 'Potassium (K)', min: 0, max: 205, unit: 'kg/ha', step: 1 },
   ph: { label: 'Soil pH', min: 0, max: 14, unit: '', step: 0.1 },
 };
