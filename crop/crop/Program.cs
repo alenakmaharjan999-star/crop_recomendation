@@ -3,6 +3,10 @@ using crop.Repositories;
 using crop.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
@@ -89,7 +93,21 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.EnsureCreated();
+    var creator = db.Database.GetService<IRelationalDatabaseCreator>();
+    var history = db.Database.GetService<IHistoryRepository>();
+
+    // Databases created by the previous EnsureCreated() startup already have the
+    // original schema but no migrations history, so baseline them against the
+    // first migration and let Migrate() apply everything after it.
+    if (creator.Exists() && creator.HasTables() && !db.Database.GetAppliedMigrations().Any())
+    {
+        var initialMigration = db.Database.GetMigrations().First();
+        db.Database.ExecuteSqlRaw(history.GetCreateIfNotExistsScript());
+        db.Database.ExecuteSqlRaw(history.GetInsertScript(
+            new HistoryRow(initialMigration, ProductInfo.GetVersion())));
+    }
+
+    db.Database.Migrate();
 }
 
 if (app.Environment.IsDevelopment())
