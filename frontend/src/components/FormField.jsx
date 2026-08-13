@@ -8,8 +8,11 @@ export default function FormField({
   error,
   required = false,
   disabled = false,
+  options,
   ...rest
 }) {
+  const listId = options ? `${name}-options` : undefined;
+
   return (
     <div className="mb-5">
 
@@ -36,6 +39,7 @@ export default function FormField({
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled}
+        list={listId}
         autoComplete={rest.autoComplete}
         className={`
           w-full
@@ -71,6 +75,14 @@ export default function FormField({
         `}
         {...rest}
       />
+
+      {options && (
+        <datalist id={listId}>
+          {options.map((option) => (
+            <option key={option} value={option} />
+          ))}
+        </datalist>
+      )}
 
       {/* Error Message */}
 
