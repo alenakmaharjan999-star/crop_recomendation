@@ -44,6 +44,33 @@ class PredictEndpointTest(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn("error", response.get_json())
 
+    def test_out_of_range_values_are_rejected(self):
+        payload = {
+            "N": 500, "P": 42, "K": 43,
+            "temperature": 21, "humidity": 82, "ph": 6.5, "rainfall": 203,
+        }
+        response = self.client.post("/predict", json=payload)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("N", response.get_json()["errors"])
+
+    def test_prediction_varies_with_input_and_returns_confidence(self):
+        rice = {
+            "N": 90, "P": 42, "K": 43,
+            "temperature": 21, "humidity": 82, "ph": 6.5, "rainfall": 203,
+        }
+        apple = {
+            "N": 20, "P": 130, "K": 200,
+            "temperature": 23, "humidity": 92, "ph": 5.9, "rainfall": 110,
+        }
+
+        first = self.client.post("/predict", json=rice).get_json()
+        second = self.client.post("/predict", json=apple).get_json()
+
+        self.assertNotEqual(first["recommended_crop"], second["recommended_crop"])
+        for result in (first, second):
+            self.assertGreater(result["confidence"], 0.0)
+            self.assertLessEqual(result["confidence"], 1.0)
+
 
 if __name__ == "__main__":
     unittest.main()

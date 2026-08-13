@@ -12,7 +12,7 @@ public class PredictRequestDto
     [Range(0d, 140d, ErrorMessage = "Nitrogen (N) must be between 0 and 140 kg/ha.")]
     public float Nitrogen { get; set; }
 
-    [Range(0d, 145d, ErrorMessage = "Phosphorus (P) must be between 0 and 145 kg/ha.")]
+    [Range(0d, 140d, ErrorMessage = "Phosphorus (P) must be between 0 and 140 kg/ha.")]
     public float Phosphorus { get; set; }
 
     [Range(0d, 205d, ErrorMessage = "Potassium (K) must be between 0 and 205 kg/ha.")]

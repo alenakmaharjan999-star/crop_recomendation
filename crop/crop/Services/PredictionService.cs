@@ -64,14 +64,23 @@ public class PredictionService : IPredictionService
         var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = null };
         var response = await client.PostAsJsonAsync("/predict", payload, jsonOptions);
         if (!response.IsSuccessStatusCode)
-            throw new Exception("ML service call failed");
+        {
+            var failure = await response.Content.ReadFromJsonAsync<FlaskErrorResponse>();
+            throw new Exception(failure?.Error is { Length: > 0 } message
+                ? $"ML service rejected the request: {message}"
+                : $"ML service call failed ({(int)response.StatusCode}).");
+        }
 
         var mlResult = await response.Content.ReadFromJsonAsync<FlaskPredictionResponse>()
                      ?? throw new Exception("Empty prediction response");
+
+        if (string.IsNullOrWhiteSpace(mlResult.RecommendedCrop))
+            throw new Exception("ML service returned no crop");
+
         var result = new PredictResponseDto
         {
             PredictedCrop = mlResult.RecommendedCrop,
-            Confidence = 0
+            Confidence = mlResult.Confidence ?? 0
         };
 
         // Step 3: save everything to PredictionHistory table
@@ -86,7 +95,8 @@ public class PredictionService : IPredictionService
             Temperature = temperature,
             Humidity = humidity,
             Rainfall = rainfall,
-            PredictedCrop = result.PredictedCrop
+            PredictedCrop = result.PredictedCrop,
+            Confidence = result.Confidence
         };
 
         await _predictions.AddAsync(historyRecord);
@@ -102,6 +112,16 @@ public class PredictionService : IPredictionService
     {
         [JsonPropertyName("recommended_crop")]
         public string RecommendedCrop { get; set; } = string.Empty;
+
+        // 0..1 probability of the winning class; null when the model has no predict_proba
+        [JsonPropertyName("confidence")]
+        public float? Confidence { get; set; }
+    }
+
+    private sealed class FlaskErrorResponse
+    {
+        [JsonPropertyName("error")]
+        public string Error { get; set; } = string.Empty;
     }
 }
 

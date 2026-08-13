@@ -19,6 +19,7 @@ CREATE TABLE PredictionHistory (
     Humidity       FLOAT NOT NULL,
     Rainfall       FLOAT NOT NULL,
     PredictedCrop  NVARCHAR(100) NOT NULL,
+    Confidence     REAL NOT NULL DEFAULT 0,
     CreatedAt      DATETIME DEFAULT GETDATE(),
     CONSTRAINT FK_Prediction_User FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
