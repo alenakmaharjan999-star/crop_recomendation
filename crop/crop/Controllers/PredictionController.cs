@@ -74,7 +74,8 @@ public class PredictionController : ControllerBase
                 precision = result.Precision,
                 recall = result.Recall,
                 f1Score = result.F1Score,
-                confusionMatrix = result.ConfusionMatrix
+                confusionMatrix = result.ConfusionMatrix,
+                fertilizerRecommendation = result.FertilizerRecommendation
             });
         }
         catch (Exception ex)

@@ -162,13 +162,15 @@ public class PredictionService : IPredictionService
                 Precision = 0,
                 Recall = 0,
                 F1Score = 0,
-                ConfusionMatrix = null
+                ConfusionMatrix = null,
+                FertilizerRecommendation = null
             };
         }
 
         var metricsResult = await metricsResponse.Content.ReadFromJsonAsync<FlaskMetricsResponse>()
             ?? throw new Exception("Empty metrics response");
-
+        //get prediciton with fertilizer
+        var predictionWithFertilizer = await GetPredictionWithFertilizerAsync(dto);
         // 3. Return combined result
         return new PredictionWithMetricsResponseDto
         {
@@ -183,6 +185,34 @@ public class PredictionService : IPredictionService
             {
                 Labels = metricsResult.Metrics.ConfusionMatrix.Labels,
                 Matrix = metricsResult.Metrics.ConfusionMatrix.Matrix
+            },
+            FertilizerRecommendation = new crop.DTOs.FertilizerRecommendation
+            {
+                Crop = predictionWithFertilizer.FertilizerRecommendation?.Crop ?? "",
+                SoilNpk = new crop.DTOs.SoilNpk
+                {
+                    N = predictionWithFertilizer.FertilizerRecommendation?.SoilNpk?.N ?? 0,
+                    P = predictionWithFertilizer.FertilizerRecommendation?.SoilNpk?.P ?? 0,
+                    K = predictionWithFertilizer.FertilizerRecommendation?.SoilNpk?.K ?? 0
+                },
+                Deficit = new crop.DTOs.Deficit
+                {
+                    N = predictionWithFertilizer.FertilizerRecommendation?.Deficit?.N ?? 0,
+                    P = predictionWithFertilizer.FertilizerRecommendation?.Deficit?.P ?? 0,
+                    K = predictionWithFertilizer.FertilizerRecommendation?.Deficit?.K ?? 0
+                },
+                Recommendation = new crop.DTOs.FertilizerRecommendationDetail
+                {
+                    Name = predictionWithFertilizer.FertilizerRecommendation?.Recommendation?.Name ?? "",
+                    Npk = predictionWithFertilizer.FertilizerRecommendation?.Recommendation?.Npk ?? "",
+                    ApplicationRateKgPerHa = predictionWithFertilizer.FertilizerRecommendation?.Recommendation?.ApplicationRateKgPerHa ?? 0,
+                    DeficientNutrients = new crop.DTOs.Deficit
+                    {
+                        N = predictionWithFertilizer.FertilizerRecommendation?.Recommendation?.DeficientNutrients?.N ?? 0,
+                        P = predictionWithFertilizer.FertilizerRecommendation?.Recommendation?.DeficientNutrients?.P ?? 0,
+                        K = predictionWithFertilizer.FertilizerRecommendation?.Recommendation?.DeficientNutrients?.K ?? 0
+                    }
+                }
             }
         };
     }
@@ -199,7 +229,43 @@ public class PredictionService : IPredictionService
         else // March, April, May
             return "summer";
     }
+    // ============================================================
+    // ✅ ADD THIS HELPER METHOD
+    // ============================================================
+    private async Task<(float Temperature, float Humidity, float Rainfall)> GetWeatherAsync(string location)
+    {
+        try
+        {
+            // Try to get seasonal weather first
+            string season = GetCurrentSeason();
+            var (temperature, humidity, rainfall) = await _weather.GetSeasonalWeatherAsync(
+                location, season, 5);
 
+            // Convert total rainfall to monthly average
+            int monthsInSeason = season.ToLower() switch
+            {
+                "monsoon" => 5,
+                "winter" => 6,
+                "summer" => 4,
+                _ => 5
+            };
+
+            float monthlyRainfall = rainfall / monthsInSeason;
+
+            // Cap at dataset max (300mm)
+            if (monthlyRainfall > 300)
+            {
+                monthlyRainfall = 300;
+            }
+
+            return (temperature, humidity, monthlyRainfall);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Seasonal weather failed, falling back to current weather");
+            return await _weather.GetWeatherAsync(location);
+        }
+    }
     public Task<List<PredictionHistory>> GetHistoryAsync(int userId)
         => _predictions.GetByUserIdAsync(userId);
 
@@ -255,7 +321,30 @@ public class PredictionService : IPredictionService
         [JsonPropertyName("matrix")]
         public List<List<int>> Matrix { get; set; } = new();
     }
+    // ✅ ADD THIS NEW METHOD
+    private async Task<PythonPredictionResponse> GetPredictionWithFertilizerAsync(PredictRequestDto dto)
+    {
+        // Get weather data (your existing logic)
+        var weather = await GetWeatherAsync(dto.Location);
 
+        // ✅ CORRECT FIELD NAMES (matches Python API)
+        var payload = new
+        {
+            nitrogen = dto.Nitrogen,
+            phosphorus = dto.Phosphorus,
+            potassium = dto.Potassium,
+            temperature = weather.Temperature,
+            humidity = weather.Humidity,
+            ph = dto.Ph,
+            rainfall = weather.Rainfall
+        };
+
+        var client = _httpFactory.CreateClient("PythonML");
+        var response = await client.PostAsJsonAsync("/predict", payload);
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadFromJsonAsync<PythonPredictionResponse>();
+    }
 
 
 }
