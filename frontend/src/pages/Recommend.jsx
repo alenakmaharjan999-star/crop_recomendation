@@ -2,6 +2,8 @@ import { useState } from 'react';
 import AppLayout from '../components/AppLayout';
 import SoilForm from '../components/SoilForm';
 import RecommendationCard from '../components/RecommendationCard';
+import FertilizerRecommendationCard from '../components/FertilizerRecommendationCard';
+import ModelPerformancePanel from '../components/ModelPerformancePanel';
 import { submitSoilData } from '../api/apiClient';
 
 export default function Recommend() {
@@ -32,14 +34,32 @@ export default function Recommend() {
         Enter your soil's N, P, K and pH values along with current weather to get a recommendation.
       </p>
 
-      <div className="max-w-[560px] rounded-[18px] border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_rgba(15,23,42,0.06)]">
-        <SoilForm onSubmit={handlePredict} loading={loading} />
-        {error && (
-          <p className="mb-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-            {error}
-          </p>
-        )}
-        <RecommendationCard crop={result?.crop} confidence={result?.confidence} loading={false} />
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(340px,0.9fr)] xl:items-start">
+        <div className="rounded-[18px] border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_rgba(15,23,42,0.06)]">
+          <SoilForm onSubmit={handlePredict} loading={loading} />
+        </div>
+        <aside className="space-y-5" aria-live="polite">
+          <div>
+            <h2 className="mb-1 font-display text-[1.1rem] text-slate-900">Crop prediction</h2>
+            <p className="text-[0.84rem] text-slate-600">Your recommended crop based on the submitted soil and weather data.</p>
+            <RecommendationCard crop={result?.crop} confidence={result?.confidence} loading={loading} />
+            {error && (
+              <p className="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                {error}
+              </p>
+            )}
+          </div>
+          <section className="rounded-[18px] border border-slate-200 bg-slate-50 p-5">
+            <h2 className="font-display text-[1.05rem] text-slate-900">Model performance</h2>
+            <p className="mt-1 text-[0.84rem] text-slate-600">Evaluation metrics returned by the crop prediction model.</p>
+            {result?.modelPerformance ? (
+              <div className="mt-4"><ModelPerformancePanel performance={result.modelPerformance} /></div>
+            ) : (
+              <p className="mt-4 text-sm text-slate-600">Model metrics will appear here after a successful crop prediction.</p>
+            )}
+          </section>
+          <FertilizerRecommendationCard fertilizer={result?.fertilizerRecommendation} />
+        </aside>
       </div>
     </AppLayout>
   );

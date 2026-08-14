@@ -1,182 +1,301 @@
-import { useState, useEffect } from 'react';
-import AppLayout from '../components/AppLayout';
-import StatCard from '../components/StatCard';
-import SoilForm from '../components/SoilForm';
-import { useAuth } from '../context/AuthContext';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
-  submitSoilData,
-  getRecommendationHistory,
-  getCurrentWeather,
-} from '../api/apiClient';
+  CloudSun,
+  FlaskConical,
+  Leaf,
+  Sprout,
+  ThermometerSun,
+  ArrowRight,
+} from 'lucide-react';
+import AppLayout from '../components/AppLayout';
+import { getStoredLatestRecommendation } from '../api/apiClient';
 
-// Use the image from the public folder
-const cropBg = '/crop_pic.jpg';
+const SYSTEM_CARDS = [
+  {
+    label: 'Supported crops',
+    value: '22',
+    detail: 'Crop classes in the trained dataset',
+    icon: Sprout,
+    tone: 'bg-emerald-100 text-emerald-700',
+  },
+  {
+    label: 'Soil parameters',
+    value: '4',
+    detail: 'N, P, K, and soil pH',
+    icon: FlaskConical,
+    tone: 'bg-amber-100 text-amber-700',
+  },
+  {
+    label: 'Fertilizer advice',
+    value: 'NPK',
+    detail: 'Deficit-based recommendation',
+    icon: Leaf,
+    tone: 'bg-lime-100 text-lime-700',
+  },
+  {
+    label: 'Weather parameters',
+    value: '3',
+    detail: 'Temperature, humidity, rainfall',
+    icon: CloudSun,
+    tone: 'bg-sky-100 text-sky-700',
+  },
+];
+
+const STEPS = [
+  {
+    number: '01',
+    title: 'Enter soil & weather data',
+    detail:
+      'Provide soil nutrients, pH, and a location for environmental conditions.',
+    icon: FlaskConical,
+  },
+  {
+    number: '02',
+    title: 'Get crop prediction',
+    detail:
+      'The trained model evaluates the supplied agricultural parameters.',
+    icon: Sprout,
+  },
+  {
+    number: '03',
+    title: 'Get fertilizer recommendation',
+    detail:
+      'NPK nutrient deficits are matched to an appropriate fertilizer.',
+    icon: Leaf,
+  },
+];
+
+const PARAMETERS = [
+  {
+    label: 'Nitrogen',
+    icon: FlaskConical,
+  },
+  {
+    label: 'Phosphorus',
+    icon: FlaskConical,
+  },
+  {
+    label: 'Potassium',
+    icon: FlaskConical,
+  },
+  {
+    label: 'Soil pH',
+    icon: FlaskConical,
+  },
+  {
+    label: 'Temperature',
+    icon: ThermometerSun,
+  },
+  {
+    label: 'Humidity',
+    icon: CloudSun,
+  },
+  {
+    label: 'Rainfall',
+    icon: CloudSun,
+  },
+];
 
 export default function Dashboard() {
-  const { user } = useAuth();
-
-  const [weather, setWeather] = useState(null);
-  const [history, setHistory] = useState([]);
-  const [latest, setLatest] = useState(null);
-  const [predictedCrop, setPredictedCrop] = useState('');
-  const [predicting, setPredicting] = useState(false);
-  const [predictError, setPredictError] = useState('');
-  const [loadingHistory, setLoadingHistory] = useState(true);
+  const [latestRecommendation, setLatestRecommendation] = useState(null);
 
   useEffect(() => {
-    getCurrentWeather()
-      .then((res) => setWeather(res.data))
-      .catch(() => setWeather(null));
-
-    getRecommendationHistory()
-      .then((res) => {
-        setHistory(res.data || []);
-      })
-      .catch(() => setHistory([]))
-      .finally(() => setLoadingHistory(false));
+    setLatestRecommendation(getStoredLatestRecommendation());
   }, []);
 
-  async function handlePredict(values) {
-    setPredicting(true);
-    setPredictedCrop('');
-    setPredictError('');
-    try {
-      const res = await submitSoilData(values);
-      const nextPrediction = res.data;
-      setLatest(nextPrediction);
-      setPredictedCrop(nextPrediction?.crop || '');
-      setHistory((prev) => [nextPrediction, ...prev]);
-    } catch (err) {
-      const data = err.response?.data;
-      const fieldErrors = data?.errors ? Object.values(data.errors).flat() : [];
-      setPredictError(fieldErrors[0] || data?.error || 'Prediction failed. Please try again.');
-    } finally {
-      setPredicting(false);
-    }
-  }
-
-  const totalRecommendations = history.length;
-  const mostRecommendedCrop = getMostFrequent(history.map((h) => h.crop));
-  const avgConfidence = history.length
-    ? Math.round(
-        (history.reduce((sum, h) => sum + (h.confidence || 0), 0) / history.length) * 100
-      )
-    : null;
-
-  const today = new Date().toLocaleDateString(undefined, {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-  });
+  const fertilizer =
+    latestRecommendation?.fertilizerRecommendation?.recommendation;
 
   return (
     <AppLayout>
-      <div className="mb-7 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="font-display text-[1.5rem] text-slate-900">Grow Smarter, Harvest Better</h1>
-          <p className="mt-1 text-[0.88rem] text-slate-600">{today}</p>
-        </div>
+      {/* Header */}
+      <header className="mb-8 max-w-3xl">
+       
 
-</div>
-      <div className="mb-7 grid gap-4 md:grid-cols-3">
-        <StatCard
-          label="Total recommendations"
-          value={loadingHistory ? '—' : totalRecommendations}
-          bandClass="b-npk"
-        />
-        <StatCard
-          label="Most recommended crop"
-          value={loadingHistory ? '—' : (mostRecommendedCrop || 'None yet')}
-          bandClass="b-humidity"
-        />
-        <StatCard
-          label="Avg. model confidence"
-          value={loadingHistory ? '—' : (avgConfidence != null ? avgConfidence : 'N/A')}
-          unit={avgConfidence != null ? '%' : ''}
-          bandClass="b-rainfall"
-        />
-      </div>
+        <h1 className="font-display text-2xl text-slate-900 md:text-[1.8rem]">
+          Crop Recommendation System
+        </h1>
 
-      <div className="grid gap-5 lg:grid-cols-[1.1fr_1fr] lg:items-start">
-        <div className="rounded-[18px] border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_rgba(15,23,42,0.06)]">
-          <h3 className="mb-1 font-display text-[1.1rem] text-slate-900">Get a recommendation</h3>
-          <p className="mb-4 text-[0.84rem] text-slate-600">
-            Enter your soil readings — temperature and humidity are pre-filled from today's weather.
-          </p>
-          <SoilForm
-            onSubmit={handlePredict}
-            loading={predicting}
-            predictedCrop={predictedCrop ?? ''}
-            prefill={
-              weather
-                ? { temperature: weather.temperature, humidity: weather.humidity }
-                : {}
-            }
-          />
-          {predictError && (
-            <p className="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-              {predictError}
-            </p>
-          )}
-          {latest?.crop && (
-            <p className="mt-3 text-[0.84rem] text-slate-600">
-              Latest: <span className="font-semibold text-slate-900">{latest.crop}</span>
-              {latest.confidence != null && ` · ${Math.round(latest.confidence * 100)}% confidence`}
-            </p>
-          )}
-        </div>
+        <p className="mt-3 text-[0.94rem] leading-6 text-slate-600">
+          Use soil nutrient and environmental parameters to receive
+          evidence-based crop predictions and NPK fertilizer guidance.
+        </p>
+      </header>
 
-        <div className="rounded-[18px] border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_rgba(15,23,42,0.06)]">
-          <h3 className="mb-1 font-display text-[1.1rem] text-slate-900">Recent history</h3>
-          <p className="mb-4 text-[0.84rem] text-slate-600">Your last predictions, most recent first.</p>
+      {/* System Overview */}
+      <section
+        aria-label="System overview"
+        className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+      >
+        {SYSTEM_CARDS.map(
+          ({ label, value, detail, icon: Icon, tone }) => (
+            <article
+              key={label}
+              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_rgba(15,23,42,0.06)]"
+            >
+              <div
+                className={`flex h-10 w-10 items-center justify-center rounded-xl ${tone}`}
+              >
+                <Icon size={20} aria-hidden="true" />
+              </div>
 
-          {loadingHistory ? (
-            <p className="text-[0.88rem] text-slate-600">Loading history…</p>
-          ) : history.length === 0 ? (
-            <p className="text-[0.88rem] text-slate-600">
-              No predictions yet. Submit the form to see your history here.
-            </p>
-          ) : (
-            <div className="flex flex-col gap-2.5">
-              {history.map((item, idx) => (
-                <div className="flex items-center justify-between rounded-[10px] border border-slate-200 bg-white px-3.5 py-3" key={item.id || idx}>
-                  <div>
-                    <p className="text-[0.92rem] font-semibold text-slate-900">{item.crop}</p>
-                    <p className="mt-0.5 text-[0.74rem] text-slate-600">
-                      {item.date ? new Date(item.date).toLocaleDateString() : '—'}
-                      {' · '}N {item.nitrogen} P {item.phosphorus} K {item.potassium} · pH {item.ph}
-                    </p>
-                  </div>
-                  <span className="font-mono text-[0.8rem] font-semibold text-emerald-600">
-                    {item.confidence != null ? `${Math.round(item.confidence * 100)}%` : '—'}
+              <p className="mt-4 text-sm text-slate-600">{label}</p>
+
+              <p className="mt-1 font-display text-2xl font-semibold text-slate-900">
+                {value}
+              </p>
+
+              <p className="mt-1 text-xs leading-5 text-slate-500">
+                {detail}
+              </p>
+            </article>
+          )
+        )}
+      </section>
+
+      {/* How the System Works */}
+      <section className="mt-8 rounded-[18px] border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_rgba(15,23,42,0.06)] sm:p-6">
+        <h2 className="font-display text-[1.2rem] text-slate-900">
+          How the system works
+        </h2>
+
+        <p className="mt-1 text-sm text-slate-600">
+          A simple path from field measurements to practical guidance.
+        </p>
+
+        <div className="mt-5 grid gap-4 md:grid-cols-3">
+          {STEPS.map(
+            ({ number, title, detail, icon: Icon }) => (
+              <article
+                key={number}
+                className="relative rounded-xl border border-slate-200 bg-slate-50 p-4"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs font-bold text-emerald-700">
+                    {number}
                   </span>
+
+                  <Icon
+                    size={19}
+                    className="text-emerald-700"
+                    aria-hidden="true"
+                  />
                 </div>
-              ))}
+
+                <h3 className="mt-4 text-sm font-semibold text-slate-900">
+                  {title}
+                </h3>
+
+                <p className="mt-1 text-sm leading-5 text-slate-600">
+                  {detail}
+                </p>
+              </article>
+            )
+          )}
+        </div>
+      </section>
+
+      {/* Parameters + Latest Recommendation */}
+      <section className="mt-8 grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
+        {/* Supported Parameters */}
+        <div className="rounded-[18px] border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_rgba(15,23,42,0.06)] sm:p-6">
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-100 text-sky-700">
+              <ThermometerSun size={20} aria-hidden="true" />
+            </div>
+
+            <div>
+              <h2 className="font-display text-[1.2rem] text-slate-900">
+                Supported parameters
+              </h2>
+
+              <p className="mt-1 text-sm text-slate-600">
+                The seven features currently used by the crop recommendation
+                model.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2">
+            {PARAMETERS.map(({ label, icon: Icon }) => (
+              <div
+                key={label}
+                className="flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5"
+              >
+                <Icon
+                  size={17}
+                  className="shrink-0 text-emerald-700"
+                  aria-hidden="true"
+                />
+
+                <span className="text-sm font-medium text-slate-700">
+                  {label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Latest Recommendation */}
+        <section className="rounded-[18px] border border-emerald-200 bg-emerald-50/50 p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_30px_rgba(15,23,42,0.06)] sm:p-6">
+          <h2 className="font-display text-[1.2rem] text-slate-900">
+            Latest recommendation
+          </h2>
+
+          {latestRecommendation?.crop ? (
+            <div className="mt-4 space-y-3">
+              <div className="rounded-xl border border-emerald-100 bg-white p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                  Crop
+                </p>
+
+                <p className="mt-1 text-lg font-semibold text-slate-900">
+                  {latestRecommendation.crop}
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-emerald-100 bg-white p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                  Fertilizer
+                </p>
+
+                <p className="mt-1 text-lg font-semibold text-slate-900">
+                  {fertilizer?.name ||
+                    'Not returned for this recommendation'}
+                </p>
+              </div>
+
+              <Link
+                className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+                to="/recommend"
+              >
+                Make another recommendation
+                <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            </div>
+          ) : (
+            <div className="mt-4 rounded-xl border border-dashed border-emerald-200 bg-white/80 p-4">
+              <p className="font-semibold text-slate-900">
+                No recommendation available yet
+              </p>
+
+              <p className="mt-1 text-sm leading-5 text-slate-600">
+                Start with your soil readings to get a crop prediction and
+                fertilizer guidance.
+              </p>
+
+              <Link
+                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
+                to="/recommend"
+              >
+                Go to Recommend
+                <ArrowRight size={16} aria-hidden="true" />
+              </Link>
             </div>
           )}
-        </div>
-      </div>
+        </section>
+      </section>
     </AppLayout>
   );
-}
-
-function getMostFrequent(arr) {
-  if (!arr.length) return null;
-  const counts = {};
-  arr.forEach((v) => {
-    if (!v) return;
-    counts[v] = (counts[v] || 0) + 1;
-  });
-  const entries = Object.entries(counts);
-  if (!entries.length) return null;
-  return entries.sort((a, b) => b[1] - a[1])[0][0];
-}
-
-function weatherIcon(condition = '') {
-  const c = condition.toLowerCase();
-  if (c.includes('rain')) return '🌧️';
-  if (c.includes('cloud')) return '☁️';
-  if (c.includes('clear') || c.includes('sun')) return '☀️';
-  if (c.includes('storm')) return '⛈️';
-  return '⛅';
 }

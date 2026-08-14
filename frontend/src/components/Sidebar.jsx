@@ -13,7 +13,6 @@ const NAV_ITEMS = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/recommend', label: 'Recommend crop', icon: Sprout },
   { to: '/history', label: 'History', icon: History },
-  { to: '/weather', label: 'Weather', icon: CloudSun },
   { to: '/profile', label: 'Profile', icon: UserCircle },
 ];
 
