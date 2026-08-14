@@ -110,24 +110,35 @@ function normalizePrediction(item, fallback = {}) {
   if (!item) return item;
 
   return {
-    ...item,
+    // Basic fields
     id: item.id ?? item.predictionId ?? fallback.id,
     crop: item.crop ?? item.predictedCrop,
     date: item.date ?? item.createdAt ?? fallback.date,
-    confidence:
-      item.confidence != null && item.confidence > 1
-        ? item.confidence / 100
-        : item.confidence,
+    confidence: item.confidence != null && item.confidence > 1
+      ? item.confidence / 100
+      : item.confidence,
+    
+    // Soil inputs
     nitrogen: item.nitrogen ?? fallback.nitrogen,
     phosphorus: item.phosphorus ?? fallback.phosphorus,
     potassium: item.potassium ?? fallback.potassium,
     ph: item.ph ?? fallback.ph,
+    location: item.location ?? fallback.location,
+    
+    // Weather data
     temperature: item.temperature ?? fallback.temperature,
     humidity: item.humidity ?? fallback.humidity,
     rainfall: item.rainfall ?? fallback.rainfall,
-    location: item.location ?? fallback.location,
     latitude: item.latitude ?? fallback.latitude,
     longitude: item.longitude ?? fallback.longitude,
+    
+    // ✅ ADD THESE 5 NEW FIELDS (THIS IS THE CHANGE)
+    accuracy: item.accuracy ?? item.Accuracy ?? 0,
+    precision: item.precision ?? item.Precision ?? 0,
+    recall: item.recall ?? item.Recall ?? 0,
+    f1Score: item.f1Score ?? item.F1Score ?? 0,
+    confusionMatrix: item.confusionMatrix ?? item.ConfusionMatrix ?? null,
+    fertilizerRecommendation: item.fertilizerRecommendation ?? item.FertilizerRecommendation ?? null,
   };
 }
 

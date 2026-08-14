@@ -1,13 +1,13 @@
+// src/pages/Register.jsx
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 import FormField from '../components/FormField';
-import { registerUser } from '../api/apiClient';
 import { useAuth } from '../context/AuthContext';
 
 export default function Register() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { register } = useAuth();
 
   const [form, setForm] = useState({
     username: '',
@@ -22,6 +22,7 @@ export default function Register() {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     setFieldErrors((prev) => ({ ...prev, [name]: '' }));
+    if (bannerError) setBannerError('');
   }
 
   function validate() {
@@ -57,14 +58,17 @@ export default function Register() {
 
     setLoading(true);
     try {
-      const response = await registerUser({
-        username: form.username,
-        password: form.password,
-        confirmPassword: form.confirmPassword,
-      });
+      const result = await register(
+        form.username,
+        form.password,
+        form.confirmPassword
+      );
 
-      login(response.data.token, response.data.user);
-      navigate('/dashboard');
+      if (result.success) {
+        navigate('/dashboard');
+      } else {
+        setBannerError(result.error || 'Could not create your account. Please try again.');
+      }
     } catch (err) {
       const serverError = err.response?.data?.error || '';
       if (err.response?.status === 409 && serverError.toLowerCase().includes('username')) {
@@ -78,12 +82,13 @@ export default function Register() {
   }
 
   return (
-    <AuthLayout
-      eyebrow="Get started"
-      title="Create your account"
-    >
+    <AuthLayout eyebrow="Get started" title="Create your account">
       <form onSubmit={handleSubmit} noValidate>
-        {bannerError && <div className="mb-4 rounded-[8px] border border-red-200 bg-red-50 px-3 py-2.5 text-[0.85rem] text-red-500">{bannerError}</div>}
+        {bannerError && (
+          <div className="mb-4 rounded-[8px] border border-red-200 bg-red-50 px-3 py-2.5 text-[0.85rem] text-red-500">
+            {bannerError}
+          </div>
+        )}
 
         <FormField
           label="Username"
@@ -117,12 +122,19 @@ export default function Register() {
           autoComplete="new-password"
         />
 
-        <button type="submit" className="mt-1.5 w-full rounded-[10px] bg-gradient-to-b from-[#55A89B] to-[#2F8C7F] px-4 py-3 text-[0.92rem] font-semibold text-white shadow-[0_2px_6px_rgba(47,140,127,0.2)] transition duration-150 ease-out hover:brightness-[0.96] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60" disabled={loading}>
+        <button
+          type="submit"
+          className="mt-1.5 w-full rounded-[10px] bg-gradient-to-b from-[#55A89B] to-[#2F8C7F] px-4 py-3 text-[0.92rem] font-semibold text-white shadow-[0_2px_6px_rgba(47,140,127,0.2)] transition duration-150 ease-out hover:brightness-[0.96] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          disabled={loading}
+        >
           {loading ? 'Creating account…' : 'Sign up'}
         </button>
 
         <p className="mt-5 text-center text-[0.86rem] text-slate-600">
-          Already have an account? <Link to="/login" className="font-semibold text-emerald-600 hover:underline">Sign in</Link>
+          Already have an account?{' '}
+          <Link to="/login" className="font-semibold text-emerald-600 hover:underline">
+            Sign in
+          </Link>
         </p>
       </form>
     </AuthLayout>

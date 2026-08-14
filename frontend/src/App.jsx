@@ -40,28 +40,28 @@ function App() {
 
         <Route
           path="/dashboard"
-          element={<Dashboard/>}
-          // element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
+          //element={<Dashboard/>}
+          element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
         />
         <Route
           path="/recommend"
           element={<Recommend/>}
-          // element={<ProtectedRoute><Recommend /></ProtectedRoute>}
+          element={<ProtectedRoute><Recommend /></ProtectedRoute>}
         />
         <Route
           path="/history"
           element={<History/>}
-          // element={<ProtectedRoute><History /></ProtectedRoute>}
+          element={<ProtectedRoute><History /></ProtectedRoute>}
         />
         <Route
           path="/weather"
           element={<Weather/>}
-          // element={<ProtectedRoute><Weather /></ProtectedRoute>}
+          element={<ProtectedRoute><Weather /></ProtectedRoute>}
         />
         <Route
           path="/profile"
           element={<Profile/>}
-          // element={<ProtectedRoute><Profile /></ProtectedRoute>}
+          element={<ProtectedRoute><Profile /></ProtectedRoute>}
         />
 
         <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />

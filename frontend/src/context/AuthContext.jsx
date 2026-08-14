@@ -1,4 +1,7 @@
+
+// src/context/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from 'react';
+import { registerUser, loginUser } from '../api/apiClient';
 
 const AuthContext = createContext(null);
 
@@ -17,6 +20,7 @@ function getStoredUser() {
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [user, setUser] = useState(getStoredUser);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -34,26 +38,62 @@ export function AuthProvider({ children }) {
     }
   }, [user]);
 
-  function login(newToken, userData) {
-    setToken(newToken);
-    setUser(userData || null);
-    localStorage.setItem('token', newToken);
-    if (userData) {
-      localStorage.setItem('user', JSON.stringify(userData));
-    } else {
-      localStorage.removeItem('user');
+  // ============ REGISTER ============
+  const register = async (username, password, confirmPassword) => {
+    setLoading(true);
+    try {
+      const response = await registerUser({ username, password, confirmPassword });
+      
+      // response.data = { token, user: { userId, username } }
+      setToken(response.data.token);
+      setUser(response.data.user);
+      
+      return { success: true, user: response.data.user };
+    } catch (error) {
+      const message = error.response?.data?.error || error.message || 'Registration failed';
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  function logout() {
+  // ============ LOGIN ============
+  const login = async (username, password) => {
+    setLoading(true);
+    try {
+      const response = await loginUser({ username, password });
+      
+      // response.data = { token, user: { userId, username } }
+      setToken(response.data.token);
+      setUser(response.data.user);
+      
+      return { success: true, user: response.data.user };
+    } catch (error) {
+      const message = error.response?.data?.error || error.message || 'Login failed';
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ============ LOGOUT ============
+  const logout = () => {
     setToken(null);
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-  }
+  };
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout, isAuthenticated: !!token }}>
+    <AuthContext.Provider value={{ 
+      token, 
+      user, 
+      loading,
+      login, 
+      register,
+      logout, 
+      isAuthenticated: !!token && !!user 
+    }}>
       {children}
     </AuthContext.Provider>
   );

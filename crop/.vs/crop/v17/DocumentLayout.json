@@ -118,8 +118,7 @@
               "RelativeToolTip": "crop\\DTOS\\PredictionWithMetricsResponseDto.cs",
               "ViewState": "AgIAAC0AAAAAAAAAAIBCwDgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-14T07:12:20.862Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-14T07:12:20.862Z"
             },
             {
               "$type": "Document",
@@ -131,8 +130,7 @@
               "RelativeToolTip": "crop\\Services\\PythonApiService.cs",
               "ViewState": "AgIAAKoAAAAAAAAAAAAowLYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-14T07:04:42.165Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-14T07:04:42.165Z"
             },
             {
               "$type": "Document",
@@ -144,8 +142,7 @@
               "RelativeToolTip": "crop\\Controllers\\WeatherController.cs",
               "ViewState": "AgIAABwAAAAAAAAAAAA2wCoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-13T19:05:29.175Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-13T19:05:29.175Z"
             },
             {
               "$type": "Document",
@@ -157,8 +154,7 @@
               "RelativeToolTip": "crop\\Properties\\launchSettings.json",
               "ViewState": "AgIAABsAAAAAAAAAAAA0wCkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-08-13T18:58:16.961Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-13T18:58:16.961Z"
             },
             {
               "$type": "Document",
@@ -170,8 +166,7 @@
               "RelativeToolTip": "crop\\Services\\OpenMeteoWeatherService.cs",
               "ViewState": "AgIAAAsBAAAAAAAAAAAowBcBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-13T18:54:12.026Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-13T18:54:12.026Z"
             },
             {
               "$type": "Document",
@@ -183,8 +178,7 @@
               "RelativeToolTip": "crop\\Repositories\\UserRepository.cs",
               "ViewState": "AgIAABQAAAAAAAAAAAAxwCEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-01T16:36:24.805Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-01T16:36:24.805Z"
             },
             {
               "$type": "Document",
@@ -196,8 +190,7 @@
               "RelativeToolTip": "crop\\Data\\AppDbContext.cs",
               "ViewState": "AgIAABwAAAAAAAAAAAA2wCoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-01T16:34:25.552Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-01T16:34:25.552Z"
             },
             {
               "$type": "Document",
@@ -209,8 +202,7 @@
               "RelativeToolTip": "crop\\Services\\PasswordService.cs",
               "ViewState": "AgIAAAoAAAAAAAAAAIBHwBcAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-01T16:30:04.927Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-01T16:30:04.927Z"
             },
             {
               "$type": "Document",
@@ -220,7 +212,7 @@
               "RelativeDocumentMoniker": "crop\\Services\\PredictionService.cs",
               "ToolTip": "D:\\7thsemproject\\Backend\\crop\\crop\\Services\\PredictionService.cs",
               "RelativeToolTip": "crop\\Services\\PredictionService.cs",
-              "ViewState": "AgIAABwAAAAAAAAAAAAjwCQAAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-01T16:28:17.804Z",
               "EditorCaption": ""
@@ -235,8 +227,7 @@
               "RelativeToolTip": "crop\\Services\\AuthService.cs",
               "ViewState": "AgIAAFsAAAAAAAAAAAA2wGAAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-01T15:56:49.51Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-01T15:56:49.51Z"
             },
             {
               "$type": "Document",
@@ -248,8 +239,7 @@
               "RelativeToolTip": "crop\\DTOS\\PredictResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-01T15:52:40.551Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-01T15:52:40.551Z"
             },
             {
               "$type": "Document",
@@ -261,8 +251,7 @@
               "RelativeToolTip": "crop\\Models\\User.cs",
               "ViewState": "AgIAABUAAAAAAAAAAABAwCIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-01T08:07:26.891Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-01T08:07:26.891Z"
             },
             {
               "$type": "Document",
@@ -274,8 +263,7 @@
               "RelativeToolTip": "crop\\Repositories\\PredictionRepository.cs",
               "ViewState": "AgIAABcAAAAAAAAAAAAxwCQAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-01T16:38:05.11Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-01T16:38:05.11Z"
             },
             {
               "$type": "Document",
@@ -287,8 +275,7 @@
               "RelativeToolTip": "crop\\Program.cs",
               "ViewState": "AgIAAG0AAAAAAAAAAAA2wHsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-01T16:38:56.389Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-01T16:38:56.389Z"
             },
             {
               "$type": "Document",
@@ -300,8 +287,7 @@
               "RelativeToolTip": "crop\\DTOS\\PredictRequestDto.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAIBHwBwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-01T15:51:56.013Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-01T15:51:56.013Z"
             },
             {
               "$type": "Document",
@@ -313,8 +299,7 @@
               "RelativeToolTip": "crop\\DTOS\\LoginDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-01T15:35:11.74Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-01T15:35:11.74Z"
             },
             {
               "$type": "Document",
@@ -326,8 +311,7 @@
               "RelativeToolTip": "crop\\DTOS\\RegisterDto.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAowBUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-01T08:16:32.411Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-01T08:16:32.411Z"
             },
             {
               "$type": "Document",
@@ -339,8 +323,7 @@
               "RelativeToolTip": "crop\\Models\\PredictionHistory.cs",
               "ViewState": "AgIAACYAAAAAAAAAAAAowDIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-01T08:11:15.358Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-01T08:11:15.358Z"
             },
             {
               "$type": "Document",
@@ -352,8 +335,7 @@
               "RelativeToolTip": "crop\\Controllers\\PredictionController.cs",
               "ViewState": "AgIAAFkAAAAAAAAAAAAxwGAAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-01T08:04:23.921Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-01T08:04:23.921Z"
             },
             {
               "$type": "Document",
@@ -365,8 +347,7 @@
               "RelativeToolTip": "crop\\Controllers\\AuthController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-01T07:57:42.625Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-01T07:57:42.625Z"
             },
             {
               "$type": "Document",
@@ -378,8 +359,7 @@
               "RelativeToolTip": "crop\\appsettings.json",
               "ViewState": "AgIAAAQAAAAAAAAAAAA0wAgAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-06-30T04:58:31.352Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-30T04:58:31.352Z"
             }
           ]
         },

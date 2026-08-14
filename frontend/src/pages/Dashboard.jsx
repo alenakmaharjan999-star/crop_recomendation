@@ -9,7 +9,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import AppLayout from '../components/AppLayout';
-import { getStoredLatestRecommendation } from '../api/apiClient';
+import { getLatestRecommendation } from '../api/apiClient';
 
 const SYSTEM_CARDS = [
   {
@@ -101,8 +101,16 @@ export default function Dashboard() {
   const [latestRecommendation, setLatestRecommendation] = useState(null);
 
   useEffect(() => {
-    setLatestRecommendation(getStoredLatestRecommendation());
-  }, []);
+  const fetchLatest = async () => {
+    try {
+      const result = await getLatestRecommendation();
+      setLatestRecommendation(result.data);
+    } catch (error) {
+      console.error('Failed to fetch latest recommendation:', error);
+    }
+  };
+  fetchLatest();
+}, []);
 
   const fertilizer =
     latestRecommendation?.fertilizerRecommendation?.recommendation;
