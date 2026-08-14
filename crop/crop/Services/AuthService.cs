@@ -47,6 +47,9 @@ public class AuthService : IAuthService
         if (!System.Text.RegularExpressions.Regex.IsMatch(dto.Username, @"^[a-zA-Z0-9_]+$"))
             throw new Exception("Username can only contain letters, numbers, and underscores");
 
+        if (System.Text.RegularExpressions.Regex.IsMatch(dto.Username, @"^[0-9]+$"))
+            throw new Exception("Username cannot be only numbers");
+
         var normalizedUsername = dto.Username.Trim();
 
         var existingUsername = await _users.GetByUsernameAsync(normalizedUsername);
