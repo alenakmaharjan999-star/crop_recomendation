@@ -1,12 +1,4 @@
-﻿// Services/PredictionService.cs
-// The core business logic of E-Krishi
-// Steps:
-//   1. Fetch weather for Location (WeatherService)
-//   2. Call Python Flask ML API with all 7 features
-//   3. Save result to SQL Server (PredictionRepository)
-//   4. Return prediction to Controller → React
-
-using crop.DTOs;
+﻿using crop.DTOs;
 using crop.Models;
 using crop.Repositories;
 using crop.Validation;
@@ -18,6 +10,7 @@ namespace crop.Services;
 public interface IPredictionService
 {
     Task<PredictResponseDto> PredictAsync(PredictRequestDto dto, int userId);
+    Task<PredictionWithMetricsResponseDto> PredictWithMetricsAsync(PredictRequestDto dto, int userId);
     Task<List<PredictionHistory>> GetHistoryAsync(int userId);
 }
 
@@ -26,53 +19,98 @@ public class PredictionService : IPredictionService
     private readonly IHttpClientFactory _httpFactory;
     private readonly IWeatherService _weather;
     private readonly IPredictionRepository _predictions;
+    private readonly ILogger<PredictionService> _logger;
 
     public PredictionService(
         IHttpClientFactory httpFactory,
         IWeatherService weather,
-        IPredictionRepository predictions)
-    { _httpFactory = httpFactory; _weather = weather; _predictions = predictions; }
+        IPredictionRepository predictions,
+        ILogger<PredictionService> logger)
+    {
+        _httpFactory = httpFactory;
+        _weather = weather;
+        _predictions = predictions;
+        _logger = logger;
+    }
 
     public async Task<PredictResponseDto> PredictAsync(PredictRequestDto dto, int userId)
     {
+        // 1. Validate location
         if (!LocationCatalog.TryNormalize(dto.Location, out var location))
-            throw new ArgumentException(
-                $"'{dto.Location}' is not a recognised district or city.", nameof(dto));
+            throw new ArgumentException($"'{dto.Location}' is not a recognised district or city.", nameof(dto));
 
-        var temperature = dto.Temperature;
-        var humidity = dto.Humidity;
-        var rainfall = dto.Rainfall;
+        // 2. ALWAYS fetch weather
+        float temperature, humidity, rainfall;
 
-        if (temperature == 0 && humidity == 0 && rainfall == 0)
+        try
         {
+            string season = GetCurrentSeason();
+            _logger.LogInformation($"🌱 Fetching {season} season weather for {location}");
+
+            (temperature, humidity, rainfall) = await _weather.GetSeasonalWeatherAsync(
+                location, season, 5);
+
+            // ============================================================
+            // ✅ FIX: Convert total rainfall to monthly average
+            // ============================================================
+
+            // Get number of months in the season
+            int monthsInSeason = season.ToLower() switch
+            {
+                "monsoon" => 5,   // June-October (5 months)
+                "winter" => 6,     // November-April (6 months)
+                "summer" => 4,     // March-June (4 months)
+                _ => 5
+            };
+
+            // Convert total rainfall to monthly average
+            float monthlyRainfall = rainfall / monthsInSeason;
+
+            _logger.LogInformation($"🌧️ Rainfall: {rainfall}mm total → {monthlyRainfall}mm monthly average ({monthsInSeason} months)");
+
+            // Cap at dataset max (300mm)
+            if (monthlyRainfall > 300)
+            {
+                _logger.LogWarning($"⚠️ Monthly rainfall {monthlyRainfall}mm exceeds max (300mm). Capping.");
+                monthlyRainfall = 300;
+            }
+
+            rainfall = monthlyRainfall;
+
+            _logger.LogInformation($"✅ Final weather: {temperature}°C, {humidity}%, {rainfall}mm");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Seasonal weather failed, falling back to current weather");
             (temperature, humidity, rainfall) = await _weather.GetWeatherAsync(location);
+            _logger.LogInformation($"⚠️ Using current weather: {temperature}°C, {humidity}%, {rainfall}mm");
         }
 
-        // Step 2: call Python Flask /predict with all 7 ML features
-        var client = _httpFactory.CreateClient("PythonML");
+        // 3. Send to Python with ALL 7 fields
         var payload = new
         {
-            N = dto.Nitrogen,
-            P = dto.Phosphorus,
-            K = dto.Potassium,
+            nitrogen = dto.Nitrogen,
+            phosphorus = dto.Phosphorus,
+            potassium = dto.Potassium,
             ph = dto.Ph,
-            temperature,
-            humidity,
-            rainfall
+            temperature = temperature,
+            humidity = humidity,
+            rainfall = rainfall
         };
-        //var response = await client.PostAsJsonAsync("/predict", payload);
+
+        var client = _httpFactory.CreateClient("PythonML");
         var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = null };
         var response = await client.PostAsJsonAsync("/predict", payload, jsonOptions);
+
         if (!response.IsSuccessStatusCode)
         {
-            var failure = await response.Content.ReadFromJsonAsync<FlaskErrorResponse>();
-            throw new Exception(failure?.Error is { Length: > 0 } message
-                ? $"ML service rejected the request: {message}"
-                : $"ML service call failed ({(int)response.StatusCode}).");
+            var errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogError($"ML service error: {errorContent}");
+            throw new Exception($"ML service call failed: {errorContent}");
         }
 
         var mlResult = await response.Content.ReadFromJsonAsync<FlaskPredictionResponse>()
-                     ?? throw new Exception("Empty prediction response");
+            ?? throw new Exception("Empty prediction response");
 
         if (string.IsNullOrWhiteSpace(mlResult.RecommendedCrop))
             throw new Exception("ML service returned no crop");
@@ -83,7 +121,7 @@ public class PredictionService : IPredictionService
             Confidence = mlResult.Confidence ?? 0
         };
 
-        // Step 3: save everything to PredictionHistory table
+        // 4. Save to database
         var historyRecord = new PredictionHistory
         {
             UserId = userId,
@@ -101,8 +139,65 @@ public class PredictionService : IPredictionService
 
         await _predictions.AddAsync(historyRecord);
 
-        // Step 4: return to controller → React
         return result;
+    }
+    public async Task<PredictionWithMetricsResponseDto> PredictWithMetricsAsync(PredictRequestDto dto, int userId)
+    {
+        // 1. Reuse existing prediction logic
+        var predictionResult = await PredictAsync(dto, userId);
+
+        // 2. Get metrics from Python API
+        var client = _httpFactory.CreateClient("PythonML");
+        var metricsResponse = await client.GetAsync("/metrics");
+
+        if (!metricsResponse.IsSuccessStatusCode)
+        {
+            // If metrics fail, return prediction without metrics
+            _logger.LogWarning("Could not fetch metrics from Python API");
+            return new PredictionWithMetricsResponseDto
+            {
+                PredictedCrop = predictionResult.PredictedCrop,
+                Confidence = predictionResult.Confidence,
+                Accuracy = 0,
+                Precision = 0,
+                Recall = 0,
+                F1Score = 0,
+                ConfusionMatrix = null
+            };
+        }
+
+        var metricsResult = await metricsResponse.Content.ReadFromJsonAsync<FlaskMetricsResponse>()
+            ?? throw new Exception("Empty metrics response");
+
+        // 3. Return combined result
+        return new PredictionWithMetricsResponseDto
+        {
+            PredictedCrop = predictionResult.PredictedCrop,
+            Confidence = predictionResult.Confidence,
+            Accuracy = metricsResult.Metrics.Accuracy,
+            Precision = metricsResult.Metrics.Precision,
+            Recall = metricsResult.Metrics.Recall,
+            F1Score = metricsResult.Metrics.F1Score,
+            // ✅ USE FULL NAMESPACE
+            ConfusionMatrix = new crop.DTOs.ConfusionMatrixData
+            {
+                Labels = metricsResult.Metrics.ConfusionMatrix.Labels,
+                Matrix = metricsResult.Metrics.ConfusionMatrix.Matrix
+            }
+        };
+    }
+
+    // Helper: Detect current season
+    private string GetCurrentSeason()
+    {
+        var month = DateTime.Now.Month;
+
+        if (month >= 6 && month <= 10)
+            return "monsoon";
+        else if (month >= 11 || month <= 4)
+            return "winter";
+        else // March, April, May
+            return "summer";
     }
 
     public Task<List<PredictionHistory>> GetHistoryAsync(int userId)
@@ -113,15 +208,54 @@ public class PredictionService : IPredictionService
         [JsonPropertyName("recommended_crop")]
         public string RecommendedCrop { get; set; } = string.Empty;
 
-        // 0..1 probability of the winning class; null when the model has no predict_proba
         [JsonPropertyName("confidence")]
         public float? Confidence { get; set; }
     }
 
-    private sealed class FlaskErrorResponse
-    {
-        [JsonPropertyName("error")]
-        public string Error { get; set; } = string.Empty;
-    }
-}
+    // Add these after the existing FlaskPredictionResponse class
 
+    private sealed class FlaskMetricsResponse
+    {
+        [JsonPropertyName("status")]
+        public string Status { get; set; } = string.Empty;
+
+        [JsonPropertyName("metrics")]
+        public FlaskMetrics Metrics { get; set; } = new();
+    }
+
+    private sealed class FlaskMetrics
+    {
+        [JsonPropertyName("accuracy")]
+        public double Accuracy { get; set; }
+
+        [JsonPropertyName("precision")]
+        public double Precision { get; set; }
+
+        [JsonPropertyName("recall")]
+        public double Recall { get; set; }
+
+        [JsonPropertyName("f1_score")]
+        public double F1Score { get; set; }
+
+        [JsonPropertyName("confusion_matrix")]
+        public FlaskConfusionMatrix ConfusionMatrix { get; set; } = new();
+
+        [JsonPropertyName("total_samples")]
+        public int TotalSamples { get; set; }
+
+        [JsonPropertyName("n_classes")]
+        public int NClasses { get; set; }
+    }
+
+    private sealed class FlaskConfusionMatrix
+    {
+        [JsonPropertyName("labels")]
+        public List<string> Labels { get; set; } = new();
+
+        [JsonPropertyName("matrix")]
+        public List<List<int>> Matrix { get; set; } = new();
+    }
+
+
+
+}

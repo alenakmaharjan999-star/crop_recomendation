@@ -54,8 +54,8 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 builder.Services.AddHttpClient("PythonML", c =>
     c.BaseAddress = new Uri("http://localhost:5000"));
 
-// HTTP client for WeatherService (calls OpenWeather API)
-builder.Services.AddHttpClient<IWeatherService, WeatherService>();
+// HTTP client for WeatherService (calls OpenMeteo)
+builder.Services.AddHttpClient<IWeatherService, OpenMeteoWeatherService>();
 
 // Register repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();

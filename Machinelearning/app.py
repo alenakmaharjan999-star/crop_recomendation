@@ -8,6 +8,14 @@ import joblib
 import numpy as np
 import pandas as pd
 
+# ============================================================
+# CHANGE 1: ADD THIS IMPORT (keep other imports as is)
+# ============================================================
+from metrics import (
+    accuracy_score, precision_score, recall_score, f1_score,
+    confusion_matrix, classification_report
+)
+
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
 
@@ -18,7 +26,18 @@ CORS(app)
 # Load the trained model and scaler once at startup
 FEATURE_ORDER = ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"]
 
-# Accepted input range per feature, aligned with the training dataset.
+# Mapping for .NET field names to Python field names
+FIELD_MAPPING = {
+    "nitrogen": "N",
+    "phosphorus": "P",
+    "potassium": "K",
+    "ph": "ph",
+    "temperature": "temperature",
+    "humidity": "humidity",
+    "rainfall": "rainfall"
+}
+
+# Accepted input range per feature
 FEATURE_RANGES = {
     "N": (0.0, 140.0),
     "P": (0.0, 140.0),
@@ -32,11 +51,71 @@ FEATURE_RANGES = {
 model = joblib.load(BASE_DIR / "crop_model.pkl")
 scaler = joblib.load(BASE_DIR / "scaler.pkl")
 
+# ============================================================
+# CHANGE 2: ADD THIS AFTER LOADING MODEL AND SCALER
+# ============================================================
+print("📊 Calculating model metrics...")
+try:
+    df = pd.read_csv(BASE_DIR / "Dataset/Crop_recommendation5000.csv")
+    X = df[FEATURE_ORDER]
+    y = df['label']
+    X_scaled = scaler.transform(X)
+    y_pred = model.predict(X_scaled)
+
+    # Calculate metrics
+    accuracy = accuracy_score(y, y_pred)
+    precision = precision_score(y, y_pred, average='weighted')
+    recall = recall_score(y, y_pred, average='weighted')
+    f1 = f1_score(y, y_pred, average='weighted')
+
+    # Get confusion matrix and labels
+    cm, labels = confusion_matrix(y, y_pred)
+
+    # Get classification report
+    report = classification_report(y, y_pred)
+
+    # Store all metrics
+    MODEL_METRICS = {
+        'accuracy': float(accuracy),
+        'precision': float(precision),
+        'recall': float(recall),
+        'f1_score': float(f1),
+        'confusion_matrix': {
+            'labels': [str(label) for label in labels[:5]],  # First 5 classes
+            'matrix': cm[:5, :5].tolist() if len(labels) > 5 else cm.tolist()
+        },
+        'classification_report': report,
+        'total_samples': len(y),
+        'n_classes': len(labels)
+    }
+    print(f"✅ Metrics calculated! Accuracy: {accuracy:.4f}")
+
+except Exception as e:
+    print(f"⚠️ Could not calculate metrics: {e}")
+    MODEL_METRICS = {
+        'accuracy': None,
+        'precision': None,
+        'recall': None,
+        'f1_score': None,
+        'confusion_matrix': None,
+        'classification_report': "Metrics not available",
+        'total_samples': 0,
+        'n_classes': 0
+    }
+
 
 def parse_features(data):
     """Returns (values, errors) for the incoming request payload."""
     values = []
     errors = {}
+
+    # Handle .NET naming convention
+    if "nitrogen" in data:
+        mapped_data = {}
+        for dotnet_field, python_field in FIELD_MAPPING.items():
+            if dotnet_field in data:
+                mapped_data[python_field] = data[dotnet_field]
+        data = mapped_data
 
     for field in FEATURE_ORDER:
         if field not in data or data[field] is None or data[field] == "":
@@ -80,11 +159,29 @@ def predict():
         if hasattr(model, "predict_proba"):
             probabilities = model.predict_proba(scaled_features)[0]
             confidence = float(np.max(probabilities))
-    except Exception as exc:  # model/scaler failure — surface as a server error
+    except Exception as exc:
         app.logger.exception("Prediction failed")
         return jsonify({"error": f"Prediction failed: {exc}"}), 500
 
-    return jsonify({"recommended_crop": str(prediction), "confidence": confidence})
+    # ============================================================
+    # CHANGE 3: MODIFY THIS RETURN STATEMENT
+    # ============================================================
+    response = {
+        "recommended_crop": str(prediction),
+        "confidence": confidence,
+        "model_performance": MODEL_METRICS  # This adds all metrics
+    }
+    return jsonify(response)
+
+
+# ✅ ADD THIS NEW ENDPOINT HERE
+@app.route("/metrics", methods=["GET"])
+def get_metrics():
+    """Endpoint to get model performance metrics"""
+    return jsonify({
+        "status": "success",
+        "metrics": MODEL_METRICS
+    })
 
 
 @app.route("/health", methods=["GET"])

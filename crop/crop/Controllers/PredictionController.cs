@@ -62,8 +62,20 @@ public class PredictionController : ControllerBase
 
         try
         {
-            var result = await _predictions.PredictAsync(dto, GetUserId());
-            return Ok(result);
+            // ✅ CHANGE: Call the NEW method that returns metrics
+            var result = await _predictions.PredictWithMetricsAsync(dto, GetUserId());
+
+            // ✅ CHANGE: Return prediction + ALL metrics
+            return Ok(new
+            {
+                predictedCrop = result.PredictedCrop,
+                confidence = result.Confidence,
+                accuracy = result.Accuracy,
+                precision = result.Precision,
+                recall = result.Recall,
+                f1Score = result.F1Score,
+                confusionMatrix = result.ConfusionMatrix
+            });
         }
         catch (Exception ex)
         {

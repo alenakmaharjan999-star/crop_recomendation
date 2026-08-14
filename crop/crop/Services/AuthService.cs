@@ -35,14 +35,17 @@ public class AuthService : IAuthService
         if (string.IsNullOrWhiteSpace(dto.Username))
             throw new Exception("Username is required");
 
-        if (dto.Username.Trim().Length > 100)
-            throw new Exception("Username must be 100 characters or fewer");
+        if (dto.Username.Trim().Length > 50)
+            throw new Exception("Username must be 50 characters or fewer");
 
         if (string.IsNullOrWhiteSpace(dto.Password))
             throw new Exception("Password is required");
 
         if (dto.Password != dto.ConfirmPassword)
             throw new Exception("Passwords do not match");
+
+        if (!System.Text.RegularExpressions.Regex.IsMatch(dto.Username, @"^[a-zA-Z0-9_]+$"))
+            throw new Exception("Username can only contain letters, numbers, and underscores");
 
         var normalizedUsername = dto.Username.Trim();
 
@@ -66,6 +69,12 @@ public class AuthService : IAuthService
 
         if (string.IsNullOrWhiteSpace(dto.Password))
             throw new Exception("Password is required");
+
+        if (dto.Password.Length < 6)
+            throw new Exception("Password must be at least 6 characters long");
+
+        if (!dto.Password.Any(char.IsDigit))
+            throw new Exception("Password must contain at least one number");
 
         var user = await _users.GetByUsernameAsync(dto.Username.Trim());
         if (user == null)

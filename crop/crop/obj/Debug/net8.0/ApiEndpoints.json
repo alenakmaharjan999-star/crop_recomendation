@@ -43,6 +43,16 @@
   },
   {
     "ContainingType": "EKrishiAPI.Controllers.PredictionController",
+    "Method": "Locations",
+    "RelativePath": "api/Prediction/locations",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EKrishiAPI.Controllers.PredictionController",
     "Method": "Predict",
     "RelativePath": "api/Prediction/predict",
     "HttpMethod": "POST",
@@ -53,6 +63,22 @@
         "Name": "dto",
         "Type": "crop.DTOs.PredictRequestDto",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "crop.Controllers.WeatherController",
+    "Method": "Current",
+    "RelativePath": "api/Weather/current",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "location",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
